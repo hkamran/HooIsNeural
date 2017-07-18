@@ -1,2 +1,2 @@
 # HooIsNeural
-Neural Networks implmented in Java
+Neural Networks implemented in Java
