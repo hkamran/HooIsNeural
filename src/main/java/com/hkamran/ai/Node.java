@@ -36,11 +36,11 @@ public class Node {
 	}
 	
 	public double getOutput() {
-		return sigmoid(this.input);
+		return Activation.sigmoid.apply(this.input);
 	}
 	
 	public double getDeriOutput() {
-		return getOutput() * (1 - getOutput());
+		return Activation.derivatives.sigmoid.apply(getOutput());
 	}
 
 	@Override
