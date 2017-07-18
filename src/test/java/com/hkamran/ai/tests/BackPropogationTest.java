@@ -25,10 +25,11 @@ public class BackPropogationTest {
 		visual = new Visualizer(back);
 		back.setVisualizer(visual);
 		back.setTrainingDataSet(new double[][] {{1, 1}, {1, 0}, {0, 1}, {0, 0}}, 
-							 new double[][] {{0}, {1}, {1}, {0}});
+							 new double[][] {{1}, {0}, {0}, {1}});
 		
-		
-		int time = 100;
+
+		Thread.sleep(1000);
+		int time = 300;
 		for (int i = 0; i < time; i++) {
 			back.train(500);
 			Thread.sleep(10);
