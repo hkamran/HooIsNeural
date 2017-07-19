@@ -6,7 +6,7 @@ import java.util.List;
 public class Network {
 
 	List<Layer> layers = new LinkedList<Layer>();
-	Node bias  = new Node(null);
+	Node bias  = new Node(null, Activations.sigmoid);
 	
 	Layer input;
 	Layer output;
@@ -14,6 +14,9 @@ public class Network {
 	Visualizer visualizer;
 	String label;
 	
+	public Network() {
+		
+	}
 	
 	public Network(int input, int output, boolean hasBias) {
 		this.input = new Layer();
@@ -21,14 +24,14 @@ public class Network {
 		this.hasBias = hasBias;
 		
 		for (int i = 0; i < input; i++) {
-			this.input.createNode();
+			this.input.addNode(Activations.sigmoid);
 		}
 		
 		this.output = new Layer();
 		this.output.setLabel("OUTPUT");
 		
 		for (int i = 0; i < output; i++) {
-			this.output.createNode();
+			this.output.addNode(Activations.sigmoid);
 		}
 		
 		layers.add(this.input);
@@ -37,6 +40,17 @@ public class Network {
 			this.bias.setLabel("BIAS");
 			this.bias.setInput(1);
 		}
+	}
+	
+	public void setInputLayer(Layer layer) {
+		this.input = layer;
+		layers.set(0, layer);
+	}
+	
+	public void setOutputLayer(Layer layer) {
+		if (this.output != null) 
+		this.output = layer;
+		layers.add(this.output);
 	}
 	
 	protected Network(Network network) {

@@ -2,6 +2,7 @@ package com.hkamran.ai.tests;
 
 import java.util.Scanner;
 
+import com.hkamran.ai.Activations;
 import com.hkamran.ai.BackPropogate;
 import com.hkamran.ai.Layer;
 import com.hkamran.ai.Network;
@@ -15,7 +16,7 @@ public class BackPropogationTest {
 		network.setLabel("XOR GATE");
 		
 		Layer layer1 = new Layer("HIDDEN");
-		layer1.createNodes(4);
+		layer1.addNodes(4, Activations.sigmoid);
 
 		network.addHiddenLayer(layer1);
 		network.createAllConnection();
@@ -25,7 +26,7 @@ public class BackPropogationTest {
 		visual = new Visualizer(back);
 		back.setVisualizer(visual);
 		back.setTrainingDataSet(new double[][] {{1, 1}, {1, 0}, {0, 1}, {0, 0}}, 
-							 new double[][] {{1}, {0}, {0}, {1}});
+							 new double[][] {{0}, {1}, {1}, {0}});
 		
 
 		Thread.sleep(1000);

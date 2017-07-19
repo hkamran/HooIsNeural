@@ -1,5 +1,7 @@
 package com.hkamran.ai;
 
+import com.hkamran.ai.Activations.Activation;
+
 public class Node {
 
 	private static int IdCounter = 0;
@@ -9,11 +11,12 @@ public class Node {
 	public int id;
 	public Layer layer;
 	public String label;
-	
+	public Activation activation;
 	private static int unknownCounter = 0;
 	
-	public Node(Layer layer) {
+	public Node(Layer layer, Activation activation) {
 		this.layer = layer;
+		this.activation = activation;
 		this.id = IdCounter++;
 		this.label = "Node " + (layer == null ? unknownCounter++ : this.layer.size());
 	}
@@ -36,11 +39,11 @@ public class Node {
 	}
 	
 	public double getOutput() {
-		return Activation.sigmoid.apply(this.input);
+		return activation.calculate(this.input);
 	}
 	
 	public double getDeriOutput() {
-		return Activation.derivatives.sigmoid.apply(getOutput());
+		return activation.derivative(getOutput());
 	}
 
 	@Override

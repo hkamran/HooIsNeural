@@ -9,8 +9,8 @@ public class BackPropogate extends Network {
 	double[][] inputDataSet;
 	double[][] targetDataSet;
 	
-	public BackPropogate(Network network) {
-		super(network);
+	public BackPropogate() {
+		super();
 		this.learningRate = 0.2;
 		
 	}

@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.hkamran.ai.Activations.Activation;
+
 public class Layer {
 
 	List<Node> nodes = new LinkedList<Node>();
@@ -24,13 +26,13 @@ public class Layer {
 		this.label = label;
 	}
 	
-	public void addNode() {
-		this.nodes.add(new Node(this));
+	public void addNode(Activation activation) {
+		this.nodes.add(new Node(this, activation));
 	}
 	
-	public void addNodes(int num) {
+	public void addNodes(int num, Activation activation) {
 		for (int i = 0; i < num; i++) {
-			this.nodes.add(new Node(this));
+			this.nodes.add(new Node(this, activation));
 		}
 	}
 	
@@ -94,12 +96,6 @@ public class Layer {
 	public List<Node> getNodes() {
 		return nodes;
 	}
-
-	public void createNode() {
-		Node node = new Node(this);
-		nodes.add(node);
-		
-	}
 	
 	public List<Connection> getConnections() {
 		List<Connection> totalConnections = new LinkedList<Connection>();
@@ -110,13 +106,6 @@ public class Layer {
 			}
 		}
 		return totalConnections;
-	}
-	
-
-	public void createNodes(int num) {
-		for (int i = 0; i < num; i++) {
-			createNode();
-		}
 	}
 	
 }

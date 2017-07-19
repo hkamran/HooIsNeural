@@ -8,11 +8,11 @@ public class Main {
 		Network network = new Network(2, 1, false);
 		
 		Layer layer1 = new Layer();
-		layer1.createNode();
-		layer1.createNode();
+		layer1.addNode(Activations.sigmoid);
+		layer1.addNode(Activations.sigmoid);
 		
 		Layer layer2 = new Layer();
-		layer2.createNodes(3);
+		layer2.addNode(Activations.sigmoid);
 		
 		network.addHiddenLayer(layer1);
 		network.addHiddenLayer(layer2);
