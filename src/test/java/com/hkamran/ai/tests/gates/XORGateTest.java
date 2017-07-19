@@ -1,4 +1,4 @@
-package com.hkamran.ai.tests;
+package com.hkamran.ai.tests.gates;
 
 import java.util.Scanner;
 
@@ -13,7 +13,7 @@ import com.hkamran.ai.Network;
 import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 
-public class XORGate {
+public class XORGateTest {
 	
 	private static final double MIN_ERROR = 0.0001;
 	private static final int TRAINING_LIMIT = 250000;
