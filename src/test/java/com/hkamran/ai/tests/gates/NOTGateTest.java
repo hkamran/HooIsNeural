@@ -12,7 +12,7 @@ import com.hkamran.ai.NetworkBuilder.NetworkType;
 
 public class NOTGateTest {
 	
-	private static final double MIN_ERROR = 0.0001;
+	private static final double MIN_ERROR = 0.01;
 	private static final int TRAINING_LIMIT = 250000;
 	static BackPropNetwork network;
 	
@@ -36,6 +36,7 @@ public class NOTGateTest {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
+				.withVisualizer()
 				.createAllConnections()
 				.build();		
 		
@@ -46,7 +47,7 @@ public class NOTGateTest {
 		train(network);
 	}
 
-	private static void train(BackPropNetwork network) {
+	private static void train(BackPropNetwork network) throws InterruptedException {
 		int cycle = 0;
 		while (network.getTotalError() > MIN_ERROR && cycle < TRAINING_LIMIT) {
 			network.clear();

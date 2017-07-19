@@ -133,6 +133,7 @@ public class Network {
 			Layer layer = layers.get(i);
 			layer.clear();
 		}
+		if (visualizer != null) visualizer.repaint();
 	}	
 	
 	public double[] getOutput() {
