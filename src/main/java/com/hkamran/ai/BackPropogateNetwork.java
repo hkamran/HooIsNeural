@@ -3,13 +3,13 @@ package com.hkamran.ai;
 import java.util.Collections;
 import java.util.List;
 
-public class BackPropogate extends Network {
+public class BackPropogateNetwork extends Network {
 
 	double learningRate;
 	double[][] inputDataSet;
 	double[][] targetDataSet;
 	
-	public BackPropogate() {
+	public BackPropogateNetwork() {
 		super();
 		this.learningRate = 0.2;
 		

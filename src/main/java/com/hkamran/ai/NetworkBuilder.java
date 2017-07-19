@@ -41,7 +41,7 @@ public class NetworkBuilder {
 	
 	private NetworkBuilder(NetworkType type) {
 		if (type == NetworkType.BACKPROP) {
-			this.network = new BackPropogate();
+			this.network = new BackPropogateNetwork();
 		} else if (type == NetworkType.NEURAL) {
 			this.network = new Network();
 		} else {

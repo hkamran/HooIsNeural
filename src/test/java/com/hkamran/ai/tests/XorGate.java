@@ -3,7 +3,7 @@ package com.hkamran.ai.tests;
 import java.util.Scanner;
 
 import com.hkamran.ai.Activations;
-import com.hkamran.ai.BackPropogate;
+import com.hkamran.ai.BackPropogateNetwork;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.Network;
 import com.hkamran.ai.NetworkBuilder;
@@ -12,8 +12,8 @@ import com.hkamran.ai.NetworkBuilder.NetworkType;
 public class XorGate {
 
 	public static void main(String[] args) throws InterruptedException {
-		BackPropogate neural = 
-			(BackPropogate) NetworkBuilder
+		BackPropogateNetwork neural = 
+			(BackPropogateNetwork) NetworkBuilder
 			.create(NetworkType.BACKPROP)
 			.setLabel("XOR GATE")
 			.setInputLayer(
