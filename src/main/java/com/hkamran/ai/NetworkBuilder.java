@@ -41,7 +41,7 @@ public class NetworkBuilder {
 	
 	private NetworkBuilder(NetworkType type) {
 		if (type == NetworkType.BACKPROP) {
-			this.network = new BackPropogateNetwork();
+			this.network = new BackPropNetwork();
 		} else if (type == NetworkType.NEURAL) {
 			this.network = new Network();
 		} else {
@@ -86,7 +86,7 @@ public class NetworkBuilder {
 		return this;
 	}
 	
-	public NetworkBuilder addBiasNode() {
+	public NetworkBuilder withBiasNode() {
 		hasBias = true;
 		return this;
 	}

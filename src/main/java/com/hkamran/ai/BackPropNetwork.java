@@ -3,14 +3,16 @@ package com.hkamran.ai;
 import java.util.Collections;
 import java.util.List;
 
-public class BackPropogateNetwork extends Network {
+public class BackPropNetwork extends Network {
 
 	double learningRate;
 	double[][] inputDataSet;
 	double[][] targetDataSet;
+	double totalError;
 	
-	public BackPropogateNetwork() {
+	public BackPropNetwork() {
 		super();
+		this.totalError = 0;
 		this.learningRate = 0.2;
 		
 	}
@@ -24,6 +26,7 @@ public class BackPropogateNetwork extends Network {
 		if (inputDataSet.length != targetDataSet.length)
 			throw new RuntimeException("input data size does not match target data size!");
 		
+		this.totalError = 0;
 		for (int i = 0; i < amount; i++) {
 			for (int j = 0; j < targetDataSet.length; j++) {
 				double[] input = inputDataSet[j];
@@ -46,7 +49,8 @@ public class BackPropogateNetwork extends Network {
 		for (int i = 0; i < output.getNodes().size(); i++) {
 			Node node = output.getNode(i);
 			double delta = target[i] - node.getOutput();
-			node.error = Math.pow(delta, 1);
+			node.error = delta;
+			this.totalError += Math.pow(delta, 2);
 		}
 		
 		for (Layer layer : layers) {
@@ -57,7 +61,6 @@ public class BackPropogateNetwork extends Network {
 				}
 			}
 		}
-		
 
 		for (Layer layer : layers) {
 			for (Node node : layer.getNodes()) {
@@ -91,6 +94,10 @@ public class BackPropogateNetwork extends Network {
 	
 	public double[][] getTargetDataSet() {
 		return targetDataSet;
+	}
+	
+	public double getTotalError() {		
+		return totalError;
 	}
 
 	public void setTrainingDataSet(double[][] inputs, double[][] targets) {

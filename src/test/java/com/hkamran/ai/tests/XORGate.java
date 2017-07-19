@@ -3,17 +3,17 @@ package com.hkamran.ai.tests;
 import java.util.Scanner;
 
 import com.hkamran.ai.Activations;
-import com.hkamran.ai.BackPropogateNetwork;
+import com.hkamran.ai.BackPropNetwork;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.Network;
 import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 
-public class XorGate {
+public class XORGate {
 
 	public static void main(String[] args) throws InterruptedException {
-		BackPropogateNetwork neural = 
-			(BackPropogateNetwork) NetworkBuilder
+		BackPropNetwork neural = 
+			(BackPropNetwork) NetworkBuilder
 			.create(NetworkType.BACKPROP)
 			.setLabel("XOR GATE")
 			.setInputLayer(
@@ -29,7 +29,7 @@ public class XorGate {
 					.create()
 					.addNodes(1, Activations.sigmoid)
 					)
-			.addBiasNode()
+			.withBiasNode()
 			.withVisualizer()
 			.createAllConnections()
 			.build();
@@ -40,17 +40,18 @@ public class XorGate {
 		
 
 		Thread.sleep(1000);
-		int time = 300;
-		for (int i = 0; i < time; i++) {
-			neural.train(500);
+		int time = 0;
+		do {
+			neural.train(1);
 			Thread.sleep(10);
-			System.out.println(time - i);
-		}
+			System.out.println("Cycle:" + (time++) + " Error:" + neural.getTotalError());
+		} while (neural.getTotalError() > 0.06);
 		
 		testNetwork(neural);
 	}
 	
 	private static void testNetwork(Network network) {
+		@SuppressWarnings("resource")
 		Scanner in = new Scanner(System.in);
 		
 		while (true) {

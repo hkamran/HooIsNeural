@@ -11,7 +11,7 @@ public class Sigmoid {
 	@Test
 	public void test() {
 		double output = Activations.sigmoid.calculate((double) 2);
-		Assert.assertTrue(Activations.sigmoid.calculate((double) 2) == 0.8807970779778823);
+		Assert.assertTrue(output == 0.8807970779778823);
 	}
 	
 }
