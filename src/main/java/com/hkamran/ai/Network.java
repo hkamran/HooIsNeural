@@ -18,38 +18,23 @@ public class Network {
 		
 	}
 	
-	public Network(int input, int output, boolean hasBias) {
-		this.input = new Layer();
-		this.input.setLabel("INPUT");
-		this.hasBias = hasBias;
-		
-		for (int i = 0; i < input; i++) {
-			this.input.addNode(Activations.sigmoid);
-		}
-		
-		this.output = new Layer();
-		this.output.setLabel("OUTPUT");
-		
-		for (int i = 0; i < output; i++) {
-			this.output.addNode(Activations.sigmoid);
-		}
-		
-		layers.add(this.input);
-		layers.add(this.output);
-		if (hasBias) {
-			this.bias.setLabel("BIAS");
-			this.bias.setInput(1);
-		}
-	}
-	
 	public void setInputLayer(Layer layer) {
 		this.input = layer;
+		layer.setLabel("INPUT");
+		if (layers.size() == 0) {
+			layers.add(layer);
+			return;
+		}
 		layers.set(0, layer);
 	}
 	
 	public void setOutputLayer(Layer layer) {
-		if (this.output != null) 
+		if (this.output != null) {
+			this.output = null;
+			layers.remove(layers.size() - 1);
+		}
 		this.output = layer;
+		this.output.setLabel("OUTPUT");
 		layers.add(this.output);
 	}
 	
@@ -122,7 +107,7 @@ public class Network {
 	}
 	
 	public void addHiddenLayer(Layer layer) {
-		layers.add(layers.size() - 1, layer);
+		this.layers.add(layer);
 	}
 	
 	public void setInput(double[] vals) {
@@ -182,5 +167,10 @@ public class Network {
 		this.label = label;
 	}
 	
+	public void addBiasNode() {
+		this.hasBias = true;
+		this.bias.setLabel("BIAS");
+		this.bias.setInput(1);
+	}
 
 }
