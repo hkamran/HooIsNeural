@@ -2,6 +2,10 @@ package com.hkamran.ai.tests;
 
 import java.util.Scanner;
 
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import com.hkamran.ai.Activations;
 import com.hkamran.ai.BackPropNetwork;
 import com.hkamran.ai.LayerBuilder;
@@ -10,47 +14,118 @@ import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 
 public class XORGate {
-
-	public static void main(String[] args) throws InterruptedException {
-		BackPropNetwork neural = 
-			(BackPropNetwork) NetworkBuilder
-			.create(NetworkType.BACKPROP)
-			.setLabel("XOR GATE")
-			.setInputLayer(
-					LayerBuilder
-					.create()
-					.addNodes(2, Activations.sigmoid))
-			.addHiddenLayer(
-					LayerBuilder
-					.create()
-					.addNodes(4, Activations.sigmoid))
-			.setOutputLayer(
-					LayerBuilder
-					.create()
-					.addNodes(1, Activations.sigmoid)
-					)
-			.withBiasNode()
-			.withVisualizer()
-			.createAllConnections()
-			.build();
+	
+	private static final double MIN_ERROR = 0.0001;
+	private static final int TRAINING_LIMIT = 250000;
+	static BackPropNetwork network;
+	
+	@BeforeClass
+	public static void xorTest() throws InterruptedException {
+		network = 
+				(BackPropNetwork) NetworkBuilder
+				.create(NetworkType.BACKPROP)
+				.setLabel("XOR GATE")
+				.setInputLayer(
+						LayerBuilder
+						.create()
+						.addNodes(2, Activations.sigmoid))
+				.addHiddenLayer(
+						LayerBuilder
+						.create()
+						.addNodes(4, Activations.sigmoid))
+				.setOutputLayer(
+						LayerBuilder
+						.create()
+						.addNodes(1, Activations.sigmoid)
+						)
+				.withBiasNode()
+				.createAllConnections()
+				.build();		
 		
-		neural.setTrainingDataSet(
+		network.setTrainingDataSet(
 				new double[][] {{1, 1}, {1, 0}, {0, 1}, {0, 0}}, 
 				new double[][] {{0}, {1}, {1}, {0}});
 		
+		train(network);
+	}
 
-		Thread.sleep(1000);
-		int time = 0;
-		do {
-			neural.train(1);
-			Thread.sleep(10);
-			System.out.println("Cycle:" + (time++) + " Error:" + neural.getTotalError());
-		} while (neural.getTotalError() > 0.06);
+	private static void train(BackPropNetwork network) {
+		int cycle = 0;
+		while (network.getTotalError() > MIN_ERROR && cycle < TRAINING_LIMIT) {
+			network.clear();
+			network.train(1);
+			if (cycle % 10000 == 0) System.out.println(cycle);
+			cycle++;
+		};
 		
-		testNetwork(neural);
+		if (cycle >= TRAINING_LIMIT) {
+			throw new RuntimeException("Unable to train network! " + network.getTotalError());
+		}
 	}
 	
-	private static void testNetwork(Network network) {
+	@Test
+	public void inputOneAndOneExpectZero() {
+		network.clear();
+		network.setInput(new double[] {1,1});
+		network.calculate();
+		double[] expected = new double[] {0};
+		double[] actual = network.getOutput();
+		for (int i = 0; i < actual.length; i++) {
+			actual[i] = Math.round(actual[i]);
+		}
+		
+		Assert.assertArrayEquals(expected, actual, 0);
+	}
+
+	@Test
+	public void inputZeroAndZeroExpectZero() {
+		network.clear();
+		network.setInput(new double[] {0, 0});
+		network.calculate();
+		double[] expected = new double[] {0};
+		double[] actual = network.getOutput();
+		for (int i = 0; i < actual.length; i++) {
+			actual[i] = Math.round(actual[i]);
+		}
+		
+		Assert.assertArrayEquals(expected, actual, 0);
+	}	
+	
+	@Test
+	public void inputOneAndZeroExpectOne() {
+		network.clear();
+		network.setInput(new double[] {1, 0});
+		network.calculate();
+		double[] expected = new double[] {1};
+		double[] actual = network.getOutput();
+		for (int i = 0; i < actual.length; i++) {
+			actual[i] = Math.round(actual[i]);
+		}
+
+		Assert.assertArrayEquals(expected, actual, 0);
+	}		
+	
+	@Test
+	public void inputZeroAndOneExpectOne() {
+		network.clear();
+		network.setInput(new double[] {0, 1});
+		network.calculate();
+		double[] expected = new double[] {1};
+		double[] actual = network.getOutput();
+		for (int i = 0; i < actual.length; i++) {
+			actual[i] = Math.round(actual[i]);
+		}
+
+		Assert.assertArrayEquals(expected, actual, 0);
+	}		
+	
+	public static void main(String[] args) throws InterruptedException {
+		xorTest();
+		train(network);
+		testViaUserInput(network);
+	}
+	
+	private static void testViaUserInput(Network network) {
 		@SuppressWarnings("resource")
 		Scanner in = new Scanner(System.in);
 		

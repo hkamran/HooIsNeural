@@ -12,7 +12,7 @@ public class BackPropNetwork extends Network {
 	
 	public BackPropNetwork() {
 		super();
-		this.totalError = 0;
+		this.totalError = Double.MAX_VALUE;
 		this.learningRate = 0.2;
 		
 	}
