@@ -129,7 +129,8 @@ public class Visualizer extends JComponent {
 					g.setColor(Color.GREEN);
 				}
 
-                g2.setStroke(new BasicStroke(2));
+				float width = (float) (2 + Math.abs(0.02 * connection.weight));
+                g2.setStroke(new BasicStroke(width));
                 g2.draw(new Line2D.Float(from.x + 14,from.y + 5, to.x - 5, to.y + 5));
 			}
 		}

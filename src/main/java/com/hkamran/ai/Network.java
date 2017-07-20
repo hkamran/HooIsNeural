@@ -174,4 +174,27 @@ public class Network {
 		this.bias.setInput(1);
 	}
 
+	public Network clone() {
+		List<Layer> cLayers = new LinkedList<Layer>();
+		
+		for (Layer layer : layers) {
+			Layer cLayer = new Layer();
+			cLayer.label = layer.label;
+			cLayers.add(cLayer);
+		}
+		
+		Network cNetwork = new Network();
+		cNetwork.hasBias = this.hasBias;
+		cNetwork.label = this.label;
+		cNetwork.setLayers(cLayers);
+		
+		return cNetwork;
+	}
+
+	private void setLayers(List<Layer> cLayers) {
+		this.input = cLayers.get(0);
+		this.layers = cLayers;
+		this.output = cLayers.get(cLayers.size() - 1);
+		
+	}
 }
