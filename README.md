@@ -6,7 +6,7 @@ Neural Networks implemented in Java
         <img width="45%" src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/preview.png"></img>
 </div>
 
-##About
+## About
 Wanted to try out neural networks, so I made my own implementation of back propogation and soon neural evolution.
 
 ## Requirements
