@@ -3,7 +3,7 @@ Neural Networks implemented in Java
 
 ## Screenshots
 <div align="center">
-        <img width="45%" src="https://raw.githubusercontent.com/hkamran/JavaAsteroidGame/master/demo/screenshot2.png"></img>
+        <img width="45%" src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/preview.png"></img>
 </div>
 
 ##About
