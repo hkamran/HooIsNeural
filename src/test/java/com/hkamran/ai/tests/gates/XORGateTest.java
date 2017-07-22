@@ -13,7 +13,6 @@ import com.hkamran.ai.Layer;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.Network;
 import com.hkamran.ai.NetworkBuilder;
-import com.hkamran.ai.Visualizer;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 
 public class XORGateTest {
@@ -125,7 +124,6 @@ public class XORGateTest {
 	
 	@Test
 	public void copyInputOneAndOneExpectZero() {
-		Network network = this.network;
 		Network cNetwork = network.clone();
 		
 		cNetwork.setInput(new double[] {1,1});
