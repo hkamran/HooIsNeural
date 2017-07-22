@@ -5,14 +5,14 @@ import com.hkamran.ai.Activations.Activation;
 public class Node {
 
 	private static int IdCounter = 0;
+	private static int unknownCounter = 0;
 	
 	private double input = 0;
 	public double error = 0;
-	public int id;
-	public Layer layer;
+	private int id;
+	private Layer layer;
 	public String label;
 	public Activation activation;
-	private static int unknownCounter = 0;
 	
 	public Node(Layer layer, Activation activation) {
 		this.layer = layer;
@@ -20,6 +20,7 @@ public class Node {
 		this.id = IdCounter++;
 		this.label = "Node " + (layer == null ? unknownCounter++ : this.layer.size());
 	}
+	
 	
 	public void clear() {
 		this.input = 0;
@@ -48,22 +49,16 @@ public class Node {
 
 	@Override
 	public int hashCode() {
-		return this.id;
-	}
-	
-	public static double sigmoid(double x) {
-		return 1/ (1 + Math.pow(Math.E, -x));
-	}
-	
-	public static double derSigmoid(double x) {
-		return x *( 1 - x);
+		return super.hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object a) {
 		if (!(a instanceof Node)) return false;
-		int id = ((Node) a).id;
-		return this.id == id;
+		Node node = (Node) a;
+		if (node.hashCode() != this.hashCode()) return false;
+		if (node.id != this.id) return false;
+		return true;
 	}
 	
 	public String toString() {
@@ -75,6 +70,10 @@ public class Node {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+	
+	public String getLabel() {
+		return label;
 	}
 	
 }

@@ -1,53 +1,29 @@
 package com.hkamran.ai;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Network {
 
-	List<Layer> layers = new LinkedList<Layer>();
-	Node bias  = new Node(null, Activations.sigmoid);
+	public Node bias  = new Node(null, Activations.sigmoid);
 	
+	List<Layer> hidden = new LinkedList<Layer>();
 	Layer input;
 	Layer output;
-	boolean hasBias;
 	Visualizer visualizer;
+	
+	boolean hasBias;
 	String label;
 	
 	public Network() {
 		
 	}
 	
-	public void setInputLayer(Layer layer) {
-		this.input = layer;
-		layer.setLabel("INPUT");
-		if (layers.size() == 0) {
-			layers.add(layer);
-			return;
-		}
-		layers.set(0, layer);
-	}
-	
-	public void setOutputLayer(Layer layer) {
-		if (this.output != null) {
-			this.output = null;
-			layers.remove(layers.size() - 1);
-		}
-		this.output = layer;
-		this.output.setLabel("OUTPUT");
-		layers.add(this.output);
-	}
-	
-	protected Network(Network network) {
-		this.layers = network.layers;
-		this.bias = network.bias;
-		this.input = network.input;
-		this.output = network.output;
-		this.hasBias = network.hasBias;
-		this.visualizer = network.visualizer;
-	}
-	
 	public void createAllConnection() {
+		List<Layer> layers = getAllLayers();
+		
 		int i = 1;
 		do {
 			Layer first = layers.get(i - 1);
@@ -88,6 +64,8 @@ public class Network {
 	public void createConnection(int fromLayerIndex, int fromLayerNodeIndex, 
 			int toLayerIndex, int toLayerNodeIndex) {
 		
+		List<Layer> layers = getAllLayers();
+		
 		Layer fromLayer = layers.get(fromLayerIndex);
 		Node fromNode = fromLayer.getNode(fromLayerNodeIndex);
 		
@@ -107,20 +85,11 @@ public class Network {
 	}
 	
 	public void addHiddenLayer(Layer layer) {
-		this.layers.add(layer);
-	}
-	
-	public void setInput(double[] vals) {
-		if (input.nodes.size() != vals.length) 
-			throw new RuntimeException("Input size does not match network input size!");
-		
-		for (int i = 0; i < vals.length; i++) {
-			Node node = input.nodes.get(i);
-			node.setInput(vals[i]);
-		}
+		this.hidden.add(layer);
 	}
 	
 	public void calculate() {
+		List<Layer> layers = getAllLayers();
 		for (int i = 1; i < layers.size(); i++) {
 			Layer layer = layers.get(i);
 			layer.calculate();
@@ -129,10 +98,13 @@ public class Network {
 	}
 
 	public void clear() {
-		for (int i = 1; i < layers.size(); i++) {
+		List<Layer> layers = getAllLayers();
+		for (int i = 0; i < layers.size(); i++) {
 			Layer layer = layers.get(i);
 			layer.clear();
 		}
+		this.bias.clear();
+		
 		if (visualizer != null) visualizer.repaint();
 	}	
 	
@@ -148,18 +120,51 @@ public class Network {
 		return output;
 	}
 	
-	public List<Layer> getHiddenLayer() {
-		return layers.subList(1, layers.size() - 2);
+	public void setOutputLayer(Layer layer) {
+		this.output = layer;
+		this.output.setLabel("OUTPUT");
+	}	
+	
+	public List<Layer> getHiddenLayers() {
+		return hidden;
+	}
+	
+	public void setHiddenLayers(List<Layer> layers) {
+		this.hidden = layers;
+		for (int i = 0; i < layers.size(); i++) {
+			Layer layer = layers.get(i);
+			layer.setLabel("HIDDEN " + i);
+		}
+	}
+	
+	
+	public void setInput(double[] vals) {
+		if (input.nodes.size() != vals.length) 
+			throw new RuntimeException("Input size does not match network input size!");
+		
+		for (int i = 0; i < vals.length; i++) {
+			Node node = input.nodes.get(i);
+			node.setInput(vals[i]);
+		}
+	}
+	
+	public void setInputLayer(Layer layer) {
+		this.input = layer;
+		layer.setLabel("INPUT");
 	}
 	
 	public Layer getInputLayer() {
 		return input;
-	}
+	}	
 	
-	public List<Layer> getLayers() {
-		return new LinkedList<Layer>(layers);
+	public List<Layer> getAllLayers() {
+		List<Layer> layers = new LinkedList<Layer>();
+		layers.add(input);
+		layers.addAll(hidden);
+		layers.add(output);
+		return layers;
 	}
-	
+		
 	public void setVisualizer(Visualizer visualizer) {
 		this.visualizer = visualizer;
 	}
@@ -175,26 +180,79 @@ public class Network {
 	}
 
 	public Network clone() {
-		List<Layer> cLayers = new LinkedList<Layer>();
+		Network cNetwork = new Network();
 		
-		for (Layer layer : layers) {
+		//Copy node, and layers
+		List<Layer> cLayers = new LinkedList<Layer>();
+		Map<Node, Node> mapping = new HashMap<Node, Node>();
+		for (Layer layer : this.getAllLayers()) {
 			Layer cLayer = new Layer();
-			cLayer.label = layer.label;
+			for (Node node : layer.getNodes()) {
+				Node cNode = new Node(cLayer, node.activation);
+				mapping.put(node, cNode);
+				cLayer.addNode(cNode);
+			}
 			cLayers.add(cLayer);
 		}
 		
-		Network cNetwork = new Network();
+		mapping.put(this.bias, cNetwork.bias);
+		
+		//Copy connections
+		List<Layer> layers = getAllLayers();
+		for (int i = 0; i < layers.size(); i++) {
+			Layer layer = layers.get(i);
+			Layer cLayer = cLayers.get(i);
+			
+			for (Node node : layer.getNodes()) {
+				for (Connection connection : layer.getConnections(node)) {
+					Node from = connection.from;
+					Node to = connection.to;
+					double weight = connection.weight;
+					
+					Node cFrom = mapping.get(from);
+					Node cTo = mapping.get(to);
+					double cWeight = weight;
+					
+					if (cFrom == null || cTo == null) {
+						throw new RuntimeException("Error copy failure");
+					}
+					
+					Connection cConnection = new Connection();
+					cConnection.from = cFrom;
+					cConnection.to = cTo;
+					cConnection.weight = cWeight;
+					
+					cLayer.addConnection(cConnection);
+				}
+			}
+		}
+		
+		
+		int inputIndex = 0;
+		int outputIndex = cLayers.size() - 1;
+		
+		Layer cInput = cLayers.get(inputIndex);
+		Layer cOutput = cLayers.get(outputIndex);
+		List<Layer> cHidden = cLayers.subList(inputIndex + 1, outputIndex);
+		
+		cNetwork.setInputLayer(cInput);
+		cNetwork.setOutputLayer(cOutput);
+		cNetwork.setHiddenLayers(cHidden);
+
 		cNetwork.hasBias = this.hasBias;
 		cNetwork.label = this.label;
-		cNetwork.setLayers(cLayers);
 		
 		return cNetwork;
 	}
 
-	private void setLayers(List<Layer> cLayers) {
-		this.input = cLayers.get(0);
-		this.layers = cLayers;
-		this.output = cLayers.get(cLayers.size() - 1);
-		
+	public String toString() {
+		StringBuffer content = new StringBuffer();
+		for (Layer layer : getAllLayers()) {
+			for (Connection connection : layer.getConnections()) {
+				content.append(connection.toString() + System.lineSeparator());
+			}
+		}
+		return content.toString();
 	}
+	
 }

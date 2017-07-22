@@ -127,10 +127,10 @@ public class NetworkBuilder {
 		}
 		
 		for (ConnectionRequest request : requests) {
-			Layer fromLayer = network.getLayers().get(request.fromLayerIndex);
+			Layer fromLayer = network.getAllLayers().get(request.fromLayerIndex);
 			Node fromNode = fromLayer.getNode(request.fromNodeIndex);
 			
-			Layer toLayer = network.getLayers().get(request.toLayerIndex);
+			Layer toLayer = network.getAllLayers().get(request.toLayerIndex);
 			Node toNode = toLayer.getNode(request.toNodeIndex);
 			
 			Connection connection = new Connection(fromNode, toNode, request.weight);

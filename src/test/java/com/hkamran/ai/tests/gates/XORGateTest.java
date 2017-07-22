@@ -8,9 +8,12 @@ import org.junit.Test;
 
 import com.hkamran.ai.Activations;
 import com.hkamran.ai.BackPropNetwork;
+import com.hkamran.ai.Connection;
+import com.hkamran.ai.Layer;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.Network;
 import com.hkamran.ai.NetworkBuilder;
+import com.hkamran.ai.Visualizer;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 
 public class XORGateTest {
@@ -57,11 +60,12 @@ public class XORGateTest {
 			if (cycle % 10000 == 0) System.out.println(cycle);
 			cycle++;
 		};
-		
 		if (cycle >= TRAINING_LIMIT) {
 			throw new RuntimeException("Unable to train network! " + network.getTotalError());
 		}
 	}
+	
+
 	
 	@Test
 	public void inputOneAndOneExpectZero() {
@@ -118,6 +122,31 @@ public class XORGateTest {
 
 		Assert.assertArrayEquals(expected, actual, 0);
 	}		
+	
+	@Test
+	public void copyInputOneAndOneExpectZero() {
+		Network network = this.network;
+		Network cNetwork = network.clone();
+		
+		cNetwork.setInput(new double[] {1,1});
+		cNetwork.calculate();
+		double[] expected = new double[] {0};
+		double[] actual = cNetwork.getOutput();
+		for (int i = 0; i < actual.length; i++) {
+			actual[i] = Math.round(actual[i]);
+		}
+		
+		Assert.assertArrayEquals(expected, actual, 0);
+	}
+	public void printWeights(Network network) {
+		for (Layer layer : network.getAllLayers()) {
+			for (Connection connection : layer.getConnections()) {
+				System.out.println(connection.weight);
+			}
+		}
+		System.out.println("");
+		
+	}
 	
 	public static void main(String[] args) throws InterruptedException {
 		xorTest();

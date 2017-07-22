@@ -11,6 +11,7 @@ import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.geom.Line2D;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
@@ -36,14 +37,15 @@ public class Visualizer extends JComponent {
 	public Visualizer(Network network) {
 		this.network = network;
 
-		for (Layer layer : network.getLayers()) {
+		for (Layer layer : network.getAllLayers()) {
 			largestLayer = Math.max(largestLayer, layer.size());
 		}
 		
 		this.frame = new JFrame("Neural Network");		
-		frame.setSize(new Dimension(75 * this.network.getLayers().size(), 45 * largestLayer));
+		frame.setSize(new Dimension(75 * this.network.getAllLayers().size(), 45 * largestLayer));
 
 		centerWindow();
+		this.repaint();
 	}
 	
 	public void centerWindow() {
@@ -82,13 +84,14 @@ public class Visualizer extends JComponent {
 		map.put(network.bias, new Point(21, 11));
 		
 		int x = 25;
-		for (int i = 0; i < network.layers.size(); i++) {
-			Layer layer = network.layers.get(i);
+		List<Layer> layers = network.getAllLayers();
+		for (int i = 0; i < layers.size(); i++) {
+			Layer layer = layers.get(i);
 			
 			int y = 35;
 			for (Node node : layer.getNodes()) {
 
-				if (i > 0 && i < network.layers.size() - 1) {
+				if (i > 0 && i < layers.size() - 1) {
 					g2.setColor(Color.yellow);
 				} else {
 					g2.setColor(Color.WHITE);
@@ -117,7 +120,7 @@ public class Visualizer extends JComponent {
 			x += layerMargin;
 		}
 		
-		for (Layer layer : network.layers) {
+		for (Layer layer : layers) {
 			
 			for (Connection connection : layer.getConnections()) {
 				Point from = map.get(connection.from);
@@ -128,6 +131,7 @@ public class Visualizer extends JComponent {
 				} else {
 					g.setColor(Color.GREEN);
 				}
+				
 
 				float width = (float) (2 + Math.abs(0.02 * connection.weight));
                 g2.setStroke(new BasicStroke(width));
