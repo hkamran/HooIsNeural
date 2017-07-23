@@ -1,9 +1,13 @@
 package com.hkamran.ai;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.hkamran.ai.Activations.Activation;
 
@@ -12,7 +16,7 @@ public class Layer {
 	List<Node> nodes = new LinkedList<Node>();
 	String label;
 
-	Map<Node, List<Connection>> mapping = new HashMap<Node, List<Connection>>();
+	Map<Node, Set<Connection>> mapping = new HashMap<Node, Set<Connection>>();
 
 	public Layer(String label) {
 		this.label = label;
@@ -42,22 +46,40 @@ public class Layer {
 
 	public void addConnection(Connection connection) {
 		if (!mapping.containsKey(connection.to)) {
-			mapping.put(connection.to, new LinkedList<Connection>());
+			mapping.put(connection.to, new HashSet<Connection>());
 
 		}
 
 		if (mapping.containsKey(connection.to)) {
-			List<Connection> list = mapping.get(connection.to);
+			Set<Connection> list = mapping.get(connection.to);
 			list.add(connection);
 		}
+	}
+	
+	public void removeConnection(Connection connection) {
+		Node to = connection.to;
+		if (to == null) return;
+		Set<Connection> cur = mapping.get(to);
+		if (cur == null) return;
+		cur.remove(connection);
+
+		int[][] pairs = null;
+        Arrays.sort(pairs, new Comparator<int[]> () {
+            @Override
+            public int compare(int[] a, int[] b) {
+            	return 0;
+            }
+        });
+		
+		
 	}
 
 	public List<Connection> getConnections(Node node) {
 		if (mapping.containsKey(node))
-			return mapping.get(node);
+			return new LinkedList<Connection>(mapping.get(node));
 		return new LinkedList<Connection>();
 	}
-
+	
 	public void removeNode(int id) {
 		Node node = this.nodes.get(id);
 		mapping.remove(node);
@@ -75,7 +97,7 @@ public class Layer {
 
 	public void calculate() {
 		for (Node node : mapping.keySet()) {
-			List<Connection> connections = mapping.get(node);
+			Set<Connection> connections = mapping.get(node);
 			for (Connection connection : connections) {
 				Node from = connection.from;
 				Node to = connection.to;
@@ -106,7 +128,7 @@ public class Layer {
 	public List<Connection> getConnections() {
 		List<Connection> totalConnections = new LinkedList<Connection>();
 		for (Node node : mapping.keySet()) {
-			List<Connection> connections = mapping.get(node);
+			Set<Connection> connections = mapping.get(node);
 			for (Connection connection : connections) {
 				totalConnections.add(connection);
 			}

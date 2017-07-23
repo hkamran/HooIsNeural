@@ -9,7 +9,7 @@ public class Node {
 	
 	private double input = 0;
 	public double error = 0;
-	private int id;
+	private final int id;
 	private Layer layer;
 	public String label;
 	public Activation activation;
@@ -74,6 +74,10 @@ public class Node {
 	
 	public String getLabel() {
 		return label;
+	}
+	
+	public Integer getId() {
+		return id;
 	}
 	
 }

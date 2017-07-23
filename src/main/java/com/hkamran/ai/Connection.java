@@ -17,4 +17,22 @@ public class Connection {
 		return from + " TO (WEIGHT:" + weight + ") " + to;
 	}
 	
+	@Override
+	public int hashCode() {
+		String str = from.getId() + " " + to.getId();
+		return str.hashCode();
+	}
+	
+	@Override 
+	public boolean equals(Object obj) {
+		if ((obj instanceof Connection)) return false;
+		Connection connection = (Connection) obj;
+		if (connection.from == this.from 
+				&& connection.to == this.to
+				&& connection.weight == this.weight) {
+			return true;
+		}
+		return false;
+	}
+	
 }
