@@ -36,7 +36,6 @@ public class NOTGateTest {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
-				.withVisualizer()
 				.createAllConnections()
 				.build();		
 		

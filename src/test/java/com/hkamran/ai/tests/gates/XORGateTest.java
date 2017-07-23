@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.hkamran.ai.Activations;
 import com.hkamran.ai.BackPropNetwork;
+import com.hkamran.ai.BackPropSettings;
 import com.hkamran.ai.Connection;
 import com.hkamran.ai.Layer;
 import com.hkamran.ai.LayerBuilder;
@@ -41,6 +42,10 @@ public class XORGateTest {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
+				.withVisualizer()
+				.withSettings(BackPropSettings
+						.create()
+						.setLearningRate(0.04))
 				.createAllConnections()
 				.build();		
 		

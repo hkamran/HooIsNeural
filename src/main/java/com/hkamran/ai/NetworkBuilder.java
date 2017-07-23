@@ -28,6 +28,7 @@ public class NetworkBuilder {
 	}
 	
 
+	Settings settings = new Settings();
 	boolean hasBias = false;
 	List<Layer> hidden = new LinkedList<Layer>();
 	Layer input;
@@ -35,11 +36,13 @@ public class NetworkBuilder {
 	
 	Network network;
 	boolean allConnection = false;
+	NetworkType type;
 	
 	List<ConnectionRequest> requests = new LinkedList<ConnectionRequest>();
 	private boolean hasVisualizer;
 	
 	private NetworkBuilder(NetworkType type) {
+		this.type = type;
 		if (type == NetworkType.BACKPROP) {
 			this.network = new BackPropNetwork();
 		} else if (type == NetworkType.NEURAL) {
@@ -147,7 +150,14 @@ public class NetworkBuilder {
 			network.setVisualizer(visual);
 		}
 		
+		this.settings.apply(network);
+		
 		return network;
+	}
+
+	public NetworkBuilder withSettings(Settings settings) {
+		this.settings = settings;
+		return this;
 	}
 	
 	
