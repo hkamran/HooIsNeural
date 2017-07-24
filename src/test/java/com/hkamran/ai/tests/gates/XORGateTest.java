@@ -43,9 +43,11 @@ public class XORGateTest {
 						)
 				.withBiasNode()
 				.withVisualizer()
-				.withSettings(BackPropSettings
+				.withSettings(
+						BackPropSettings
 						.create()
-						.setLearningRate(0.04))
+						.setLearningRate(0.04)
+						.setRandomSeed(3000))
 				.createAllConnections()
 				.build();		
 		

@@ -141,6 +141,8 @@ public class NetworkBuilder {
 			toLayer.addConnection(connection);
 		}
 		
+		this.settings.apply(network);
+		
 		if (allConnection) {
 			network.createAllConnection();
 		}
@@ -150,7 +152,6 @@ public class NetworkBuilder {
 			network.setVisualizer(visual);
 		}
 		
-		this.settings.apply(network);
 		
 		return network;
 	}

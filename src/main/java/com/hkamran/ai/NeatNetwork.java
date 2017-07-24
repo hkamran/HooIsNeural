@@ -7,6 +7,13 @@ public class NeatNetwork extends Network {
 
 	Network best;
 	
+	class Gene {
+		int fromLayerIndex;
+		int fromNodeIndex;
+		int toLayerIndex;
+		int toNodeIndex;
+	}
+	
 	class Genome {
 		Network network;
 		int rank;
@@ -21,15 +28,15 @@ public class NeatNetwork extends Network {
 	}
 	
 	int hiddenNodeCap;
+	double createConnection = 0.05;
+	double removeConnection = 0.1;
+	double createNode = 0.02;
+	double modifyWeight = 0.15;
+	double weightMutationStep = 2;
+
 	
-	class MutationRates {
-		double createConnection = 0.05;
-		double removeConnection = 0.1;
-		double createNode = 0.02;
-		double modifyWeight = 0.15;
-		double weightMutationStep = 2;
+	private void createPopulation(Network network) {
+		
 	}
-	
-	
 	
 }

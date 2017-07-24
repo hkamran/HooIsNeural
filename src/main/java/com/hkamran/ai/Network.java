@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class Network {
 
@@ -16,6 +17,8 @@ public class Network {
 	
 	boolean hasBias;
 	String label;
+	long seed = System.currentTimeMillis();
+	Random random = new Random(seed);
 	
 	public Network() {
 		
@@ -57,7 +60,7 @@ public class Network {
 	}
 
 	private double getRandomInt(int min, int max) {
-		double result = (Math.random() * (max - min)) + min;
+		double result = (random.nextDouble() * (max - min)) + min;
 		return result;
 	}
 	
@@ -79,7 +82,6 @@ public class Network {
 		connection.from = fromNode;
 		connection.to = toNode;
 		connection.weight =  getRandomInt(-1, 1);
-		
 		
 		toLayer.addConnection(connection);
 	}
@@ -255,4 +257,8 @@ public class Network {
 		return content.toString();
 	}
 	
+	public void setRandomSeed(long seed) {
+		this.seed = seed;
+		random = new Random(seed);
+	}
 }

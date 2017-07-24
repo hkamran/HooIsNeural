@@ -108,5 +108,7 @@ public class BackPropNetwork extends Network {
 		this.inputDataSet = inputs;
 		this.targetDataSet = targets;
 	}
+
+
 	
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.hkamran.ai.Activations;
 import com.hkamran.ai.BackPropNetwork;
+import com.hkamran.ai.BackPropSettings;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
@@ -20,7 +21,6 @@ public class NANDGateTest {
 		network = 
 				(BackPropNetwork) NetworkBuilder
 				.create(NetworkType.BACKPROP)
-				.setLabel("XOR GATE")
 				.setInputLayer(
 						LayerBuilder
 						.create()
@@ -35,6 +35,11 @@ public class NANDGateTest {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
+				.withSettings(
+						BackPropSettings
+						.create()
+						.setLearningRate(0.04)
+						.setRandomSeed(3000))
 				.createAllConnections()
 				.build();		
 		
