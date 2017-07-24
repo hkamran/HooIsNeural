@@ -12,7 +12,7 @@ import com.hkamran.ai.NetworkBuilder.NetworkType;
 
 public class PlayGround {
 
-	private static final double MIN_ERROR = 0.26;
+	private static final double MIN_ERROR = 0.01;
 	private static final int TRAINING_LIMIT = 350000;
 	
 	public static void main(String[] args) {
@@ -28,7 +28,7 @@ public class PlayGround {
 				.addHiddenLayer(
 						LayerBuilder
 						.create()
-						.addNodes(3, Activations.sigmoid))
+						.addNodes(4, Activations.sigmoid))
 				.setOutputLayer(
 						LayerBuilder
 						.create()

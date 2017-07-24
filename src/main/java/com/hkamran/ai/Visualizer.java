@@ -42,7 +42,7 @@ public class Visualizer extends JComponent {
 		}
 		
 		this.frame = new JFrame("Neural Network");		
-		frame.setSize(new Dimension(75 * this.network.getAllLayers().size(), 45 * largestLayer));
+		frame.setSize(new Dimension(75 * this.network.getAllLayers().size(), 40 + 45 * largestLayer));
 
 		centerWindow();
 		this.repaint();
