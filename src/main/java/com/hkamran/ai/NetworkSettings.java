@@ -1,6 +1,6 @@
 package com.hkamran.ai;
 
-public class Settings {
+public class NetworkSettings {
 
 
 

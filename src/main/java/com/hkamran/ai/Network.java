@@ -34,9 +34,7 @@ public class Network {
 			
 			for (Node firstNode : first.nodes) {
 				for (Node secondNode : second.nodes) {
-					Connection connection = new Connection();
-					connection.from = firstNode;
-					connection.to = secondNode;
+					Connection connection = new Connection(firstNode, secondNode);
 					connection.weight = getRandomInt(-1, 1);
 					second.addConnection(connection);
 				}
@@ -49,9 +47,7 @@ public class Network {
 		for (i = 1; i < layers.size() - 1; i++) {
 			Layer layer = layers.get(i);
 			for (Node node : layer.nodes) {
-				Connection connection  = new Connection();
-				connection.from = bias;
-				connection.to = node;
+				Connection connection  = new Connection(bias, node);
 				connection.weight = getRandomInt(-2, 1);
 				layer.addConnection(connection);
 				
@@ -64,7 +60,7 @@ public class Network {
 		return result;
 	}
 	
-	public void createConnection(int fromLayerIndex, int fromLayerNodeIndex, 
+	public Connection createConnection(int fromLayerIndex, int fromLayerNodeIndex, 
 			int toLayerIndex, int toLayerNodeIndex) {
 		
 		List<Layer> layers = getAllLayers();
@@ -78,13 +74,35 @@ public class Network {
 		if (fromNode == null || toNode == null) 
 			throw new RuntimeException("Invalid connection");
 		
-		Connection connection = new Connection();
-		connection.from = fromNode;
-		connection.to = toNode;
+		Connection connection = new Connection(fromNode, toNode);
 		connection.weight =  getRandomInt(-1, 1);
 		
 		toLayer.addConnection(connection);
+		
+		return connection;
 	}
+	
+	public void removeConnection(int fromLayerIndex, int fromLayerNodeIndex, 
+			int toLayerIndex, int toLayerNodeIndex) {
+		
+		List<Layer> layers = getAllLayers();
+		
+		Layer fromLayer = layers.get(fromLayerIndex);
+		Node fromNode = fromLayer.getNode(fromLayerNodeIndex);
+		
+		Layer toLayer = layers.get(toLayerIndex);
+		Node toNode = toLayer.getNode(toLayerNodeIndex);	
+		
+		List<Connection> connections = toLayer.getConnections();
+		for (Connection connection : connections) {
+			if (connection.from == fromNode &&
+				connection.to == toNode) {
+				toLayer.removeConnection(connection);
+			}
+		}
+	}
+	
+
 	
 	public void addHiddenLayer(Layer layer) {
 		this.hidden.add(layer);
@@ -219,9 +237,7 @@ public class Network {
 						throw new RuntimeException("Error copy failure");
 					}
 					
-					Connection cConnection = new Connection();
-					cConnection.from = cFrom;
-					cConnection.to = cTo;
+					Connection cConnection = new Connection(cFrom, cTo);
 					cConnection.weight = cWeight;
 					
 					cLayer.addConnection(cConnection);

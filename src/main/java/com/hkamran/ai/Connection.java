@@ -5,14 +5,19 @@ public class Connection {
 	public double weight;
 	Node from;
 	Node to;
+
+	public Connection(Node from, Node to) {
+		this.from = from;
+		this.to = to;
+		this.weight = 0;
+	}
 	
-	public Connection() {}
-	public Connection(Node from, Node to, double weight) {
+	public Connection(Node from, Node to, Double weight) {
 		this.from = from;
 		this.to = to;
 		this.weight = weight;
 	}
-	
+
 	public String toString() {
 		return from + " TO (WEIGHT:" + weight + ") " + to;
 	}

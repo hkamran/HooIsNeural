@@ -28,7 +28,7 @@ public class NetworkBuilder {
 	}
 	
 
-	Settings settings = new Settings();
+	NetworkSettings settings = new NetworkSettings();
 	boolean hasBias = false;
 	List<Layer> hidden = new LinkedList<Layer>();
 	Layer input;
@@ -136,7 +136,8 @@ public class NetworkBuilder {
 			Layer toLayer = network.getAllLayers().get(request.toLayerIndex);
 			Node toNode = toLayer.getNode(request.toNodeIndex);
 			
-			Connection connection = new Connection(fromNode, toNode, request.weight);
+			Connection connection = new Connection(fromNode, toNode);
+			connection.weight =  request.weight;
 			
 			toLayer.addConnection(connection);
 		}
@@ -156,7 +157,7 @@ public class NetworkBuilder {
 		return network;
 	}
 
-	public NetworkBuilder withSettings(Settings settings) {
+	public NetworkBuilder withSettings(NetworkSettings settings) {
 		this.settings = settings;
 		return this;
 	}

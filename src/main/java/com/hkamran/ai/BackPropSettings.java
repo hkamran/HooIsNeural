@@ -1,6 +1,6 @@
 package com.hkamran.ai;
 
-public class BackPropSettings extends Settings {
+public class BackPropSettings extends NetworkSettings {
 
 	double learningRate = 0.2;
 	long seed = System.currentTimeMillis();
