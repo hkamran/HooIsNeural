@@ -22,10 +22,7 @@ public class Network {
 	String label;
 	long seed = System.currentTimeMillis();
 	Random random = new Random(seed);
-	
-	public Network() {
-		
-	}
+	NetworkSettings settings;
 	
 	protected void createAllConnection(boolean enable) {
 		List<Layer> layers = getLayers();
@@ -91,6 +88,10 @@ public class Network {
 		Layer from = b.layer;
 		if (from == null) return null;
 		return from.getConnection(aTob);
+	}
+	
+	public List<Connection> getConnections() {
+		return new LinkedList<Connection>(connections);
 	}
 
 	public void addConnection(Connection connection) {
@@ -197,6 +198,10 @@ public class Network {
 		this.label = label;
 	}
 	
+	public void setSettings(NetworkSettings settings) {
+		this.settings = settings;
+	}
+	
 	public void addBiasNode() {
 		this.hasBias = true;
 		this.bias.setLabel("BIAS");
@@ -263,6 +268,7 @@ public class Network {
 
 		cNetwork.hasBias = this.hasBias;
 		cNetwork.label = this.label;
+		cNetwork.setSettings(this.settings);
 		
 		return cNetwork;
 	}

@@ -1,6 +1,6 @@
 package com.hkamran.ai;
 
-public class NeatSettings {
+public class NeatSettings extends NetworkSettings {
 	
 	double createConnectionChance = 0.05;
 	double removeConnectionChance = 0.1;

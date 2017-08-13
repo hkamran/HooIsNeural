@@ -160,6 +160,7 @@ public class NetworkBuilder {
 			network.setVisualizer(visual);
 		}
 		
+		network.setSettings(settings);
 		
 		return network;
 	}

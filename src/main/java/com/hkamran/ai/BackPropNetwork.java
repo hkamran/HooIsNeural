@@ -11,10 +11,8 @@ public class BackPropNetwork extends Network {
 	double totalError;
 	
 	public BackPropNetwork() {
-		super();
 		this.totalError = Double.MAX_VALUE;
 		this.learningRate = 0.2;
-		
 	}
 	
 	public void setLearningRate(double learningRate) {
