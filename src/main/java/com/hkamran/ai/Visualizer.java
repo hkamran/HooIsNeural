@@ -123,6 +123,8 @@ public class Visualizer extends JComponent {
 		for (Layer layer : layers) {
 			
 			for (Connection connection : layer.getConnections()) {
+				if (!connection.isEnabled()) continue;
+				
 				Point from = map.get(connection.from);
 				Point to = map.get(connection.to);
 				

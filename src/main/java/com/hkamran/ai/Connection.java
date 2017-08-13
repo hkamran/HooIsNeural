@@ -37,11 +37,10 @@ public class Connection {
 	
 	@Override 
 	public boolean equals(Object obj) {
-		if ((obj instanceof Connection)) return false;
+		if (!(obj instanceof Connection)) return false;
 		Connection connection = (Connection) obj;
 		if (connection.from == this.from 
-				&& connection.to == this.to
-				&& connection.weight == this.weight) {
+				&& connection.to == this.to) {
 			return true;
 		}
 		return false;

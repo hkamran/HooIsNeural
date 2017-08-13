@@ -16,7 +16,7 @@ public class Network {
 	Layer input;
 	Layer output;
 	Visualizer visualizer;
-	Set<Connection> connections = new HashSet<Connection>();
+	public Set<Connection> connections = new HashSet<Connection>();
 	
 	boolean hasBias;
 	String label;
@@ -27,7 +27,7 @@ public class Network {
 		
 	}
 	
-	public void createAllConnection(boolean enable) {
+	protected void createAllConnection(boolean enable) {
 		List<Layer> layers = getLayers();
 		
 		int i = 1;
@@ -39,6 +39,7 @@ public class Network {
 				for (Node secondNode : second.nodes) {
 					Connection connection = new Connection(firstNode, secondNode);
 					connection.weight = getRandomInt(-1, 1);
+					connection.enabled = enable;
 					addConnection(connection);
 				}
 			}
@@ -53,6 +54,7 @@ public class Network {
 			for (Node node : layer.nodes) {
 				Connection connection = new Connection(bias, node);
 				connection.weight = getRandomInt(-2, 1);
+				connection.enabled = enable;
 				addConnection(connection);
 			}
 		}
@@ -82,9 +84,18 @@ public class Network {
 		
 		if (visualizer != null) visualizer.repaint();
 	}	
+	
+	public Connection getConnection(Node a, Node b) {
+		Connection aTob = new Connection(a, b);
+		if (!connections.contains(aTob)) return null;
+		Layer from = b.layer;
+		if (from == null) return null;
+		return from.getConnection(aTob);
+	}
 
 	public void addConnection(Connection connection) {
 		if (connection.from == null || connection.to == null) return;
+		if (connections.contains(connection)) return;
 		connections.add(connection);
 		Layer toLayer = connection.to.layer;
 		toLayer.addConnection(connection);
@@ -92,6 +103,7 @@ public class Network {
 	
 	public void removeConnection(Connection connection) {
 		if (connection.from == null || connection.to == null) return;
+		if (!connections.contains(connection)) return;
 		connections.remove(connection);
 		Layer toLayer = connection.to.layer;
 		if (toLayer == null) return;

@@ -1,7 +1,5 @@
 package com.hkamran.ai;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -62,18 +60,19 @@ public class Layer {
 		Set<Connection> cur = mapping.get(to);
 		if (cur == null) return;
 		cur.remove(connection);
-
-		int[][] pairs = null;
-        Arrays.sort(pairs, new Comparator<int[]> () {
-            @Override
-            public int compare(int[] a, int[] b) {
-            	return 0;
-            }
-        });
-		
-		
 	}
-
+	
+	public Connection getConnection(Connection connection) {
+		List<Connection> connections = getConnections(connection.to);
+		if (connections == null || connections.size() == 0) return null;
+		
+		for (int i = 0; i < connections.size(); i++) {
+			Connection c = connections.get(i);
+			if (c.equals(connection)) return c;
+		}
+		return null;
+	}
+	
 	public List<Connection> getConnections(Node node) {
 		if (mapping.containsKey(node))
 			return new LinkedList<Connection>(mapping.get(node));
@@ -147,5 +146,6 @@ public class Layer {
 		}
 		return cLayer;
 	}
-	
+
+
 }
