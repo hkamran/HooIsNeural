@@ -99,6 +99,8 @@ public class Layer {
 		for (Node node : mapping.keySet()) {
 			Set<Connection> connections = mapping.get(node);
 			for (Connection connection : connections) {
+				if (!connection.isEnabled()) continue;
+				
 				Node from = connection.from;
 				Node to = connection.to;
 				
@@ -114,6 +116,7 @@ public class Layer {
 	}
 
 	public Node getNode(int index) {
+		if (index <  0 || index >= nodes.size()) return null;
 		return nodes.get(index);
 	}
 

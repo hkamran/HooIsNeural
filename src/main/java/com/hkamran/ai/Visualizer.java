@@ -37,12 +37,12 @@ public class Visualizer extends JComponent {
 	public Visualizer(Network network) {
 		this.network = network;
 
-		for (Layer layer : network.getAllLayers()) {
+		for (Layer layer : network.getLayers()) {
 			largestLayer = Math.max(largestLayer, layer.size());
 		}
 		
 		this.frame = new JFrame("Neural Network");		
-		frame.setSize(new Dimension(75 * this.network.getAllLayers().size(), 40 + 45 * largestLayer));
+		frame.setSize(new Dimension(75 * this.network.getLayers().size(), 40 + 45 * largestLayer));
 
 		centerWindow();
 		this.repaint();
@@ -84,7 +84,7 @@ public class Visualizer extends JComponent {
 		map.put(network.bias, new Point(21, 11));
 		
 		int x = 25;
-		List<Layer> layers = network.getAllLayers();
+		List<Layer> layers = network.getLayers();
 		for (int i = 0; i < layers.size(); i++) {
 			Layer layer = layers.get(i);
 			

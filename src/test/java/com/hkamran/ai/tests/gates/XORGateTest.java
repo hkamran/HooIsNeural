@@ -144,7 +144,7 @@ public class XORGateTest {
 		Assert.assertArrayEquals(expected, actual, 0);
 	}
 	public void printWeights(Network network) {
-		for (Layer layer : network.getAllLayers()) {
+		for (Layer layer : network.getLayers()) {
 			for (Connection connection : layer.getConnections()) {
 				System.out.println(connection.weight);
 			}

@@ -5,12 +5,19 @@ public class Connection {
 	public double weight;
 	Node from;
 	Node to;
-
+	boolean enabled = true;
+	
 	public Connection(Node from, Node to) {
 		this.from = from;
 		this.to = to;
 		this.weight = 0;
 	}
+	
+	public Connection(Node from, Node to, double weight) {
+		this.from = from;
+		this.to = to;
+		this.weight = weight;
+	}	
 	
 	public Connection(Node from, Node to, Double weight) {
 		this.from = from;
@@ -38,6 +45,14 @@ public class Connection {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean val) {
+		this.enabled = val;
 	}
 	
 }

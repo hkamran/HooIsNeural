@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.tree.TreeNode;
+
 public class NeatNetwork extends Network {
 
 	Network best;
@@ -52,7 +54,8 @@ public class NeatNetwork extends Network {
 		
 		public void addGene(Gene gene) {
 			if (genes.containsKey(gene)) return;
-			Connection connection = network.createConnection(
+
+			Connection connection = createConnection(
 										gene.fromLayerIndex, 
 										gene.fromNodeIndex, 
 										gene.toLayerIndex, 
@@ -66,7 +69,7 @@ public class NeatNetwork extends Network {
 		
 		public void removeGene(Gene gene) {
 			if (!genes.containsKey(gene)) return;
-			network.removeConnection(gene.fromLayerIndex,
+			removeConnection(gene.fromLayerIndex,
 					gene.fromNodeIndex,
 					gene.toLayerIndex, 
 					gene.toNodeIndex);
@@ -87,7 +90,47 @@ public class NeatNetwork extends Network {
 		
 	}
 	
-
+	public Connection createConnection(int fromLayerIndex, int fromLayerNodeIndex, 
+			int toLayerIndex, int toLayerNodeIndex) {
+		
+		List<Layer> layers = getLayers();
+		
+		Layer fromLayer = layers.get(fromLayerIndex);
+		Node fromNode = fromLayer.getNode(fromLayerNodeIndex);
+		
+		Layer toLayer = layers.get(toLayerIndex);
+		Node toNode = toLayer.getNode(toLayerNodeIndex);
+		
+		if (fromNode == null || toNode == null) 
+			throw new RuntimeException("Invalid connection");
+		
+		Connection connection = new Connection(fromNode, toNode);
+		connection.weight =  getRandomInt(-1, 1);
+		
+		toLayer.addConnection(connection);
+		
+		return connection;
+	}
+	
+	public void removeConnection(int fromLayerIndex, int fromLayerNodeIndex, 
+			int toLayerIndex, int toLayerNodeIndex) {
+		
+		List<Layer> layers = getLayers();
+		
+		Layer fromLayer = layers.get(fromLayerIndex);
+		Node fromNode = fromLayer.getNode(fromLayerNodeIndex);
+		
+		Layer toLayer = layers.get(toLayerIndex);
+		Node toNode = toLayer.getNode(toLayerNodeIndex);	
+		
+		List<Connection> connections = toLayer.getConnections();
+		for (Connection connection : connections) {
+			if (connection.from == fromNode &&
+				connection.to == toNode) {
+				toLayer.removeConnection(connection);
+			}
+		}
+	}
 
 	
 	private void createPopulation(int size) {
@@ -95,6 +138,8 @@ public class NeatNetwork extends Network {
 	}
 	
 	public void mutate(Genome genome) {
+		
+		
 		
 	}
 	

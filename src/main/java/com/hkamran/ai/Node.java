@@ -10,7 +10,7 @@ public class Node {
 	private double input = 0;
 	public double error = 0;
 	private final int id;
-	private Layer layer;
+	public Layer layer;
 	public String label;
 	public Activation activation;
 	

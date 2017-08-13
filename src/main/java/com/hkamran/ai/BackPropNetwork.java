@@ -43,7 +43,7 @@ public class BackPropNetwork extends Network {
 			throw new RuntimeException("Input size does not match target size!");
 		
 		Layer output = this.output;
-		List<Layer> layers = this.getAllLayers();
+		List<Layer> layers = this.getLayers();
 		Collections.reverse(layers);
 		
 		for (int i = 0; i < output.getNodes().size(); i++) {
@@ -57,6 +57,8 @@ public class BackPropNetwork extends Network {
 			for (Node node : layer.getNodes()) {
 				List<Connection> connections = layer.getConnections(node);
 				for (Connection connection : connections) {
+					if (!connection.isEnabled()) continue;
+					
 					connection.from.error += connection.weight * connection.to.error;
 				}
 			}
@@ -65,6 +67,8 @@ public class BackPropNetwork extends Network {
 		for (Layer layer : layers) {
 			for (Node node : layer.getNodes()) {
 				for (Connection connection : layer.getConnections(node)) {
+					if (!connection.isEnabled()) continue;
+					
 					double error = connection.to.error;
 					double derivative = connection.to.getDeriOutput();
 					double out = connection.from.getOutput();

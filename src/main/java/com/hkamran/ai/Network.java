@@ -1,10 +1,12 @@
 package com.hkamran.ai;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class Network {
 
@@ -14,6 +16,7 @@ public class Network {
 	Layer input;
 	Layer output;
 	Visualizer visualizer;
+	Set<Connection> connections = new HashSet<Connection>();
 	
 	boolean hasBias;
 	String label;
@@ -24,8 +27,8 @@ public class Network {
 		
 	}
 	
-	public void createAllConnection() {
-		List<Layer> layers = getAllLayers();
+	public void createAllConnection(boolean enable) {
+		List<Layer> layers = getLayers();
 		
 		int i = 1;
 		do {
@@ -36,7 +39,7 @@ public class Network {
 				for (Node secondNode : second.nodes) {
 					Connection connection = new Connection(firstNode, secondNode);
 					connection.weight = getRandomInt(-1, 1);
-					second.addConnection(connection);
+					addConnection(connection);
 				}
 			}
 			i++;
@@ -44,72 +47,24 @@ public class Network {
 		
 		if (!hasBias) return;
 		
+		//bias setup
 		for (i = 1; i < layers.size() - 1; i++) {
 			Layer layer = layers.get(i);
 			for (Node node : layer.nodes) {
-				Connection connection  = new Connection(bias, node);
+				Connection connection = new Connection(bias, node);
 				connection.weight = getRandomInt(-2, 1);
-				layer.addConnection(connection);
-				
+				addConnection(connection);
 			}
 		}
 	}
 
-	private double getRandomInt(int min, int max) {
+	protected double getRandomInt(int min, int max) {
 		double result = (random.nextDouble() * (max - min)) + min;
 		return result;
 	}
 	
-	public Connection createConnection(int fromLayerIndex, int fromLayerNodeIndex, 
-			int toLayerIndex, int toLayerNodeIndex) {
-		
-		List<Layer> layers = getAllLayers();
-		
-		Layer fromLayer = layers.get(fromLayerIndex);
-		Node fromNode = fromLayer.getNode(fromLayerNodeIndex);
-		
-		Layer toLayer = layers.get(toLayerIndex);
-		Node toNode = toLayer.getNode(toLayerNodeIndex);
-		
-		if (fromNode == null || toNode == null) 
-			throw new RuntimeException("Invalid connection");
-		
-		Connection connection = new Connection(fromNode, toNode);
-		connection.weight =  getRandomInt(-1, 1);
-		
-		toLayer.addConnection(connection);
-		
-		return connection;
-	}
-	
-	public void removeConnection(int fromLayerIndex, int fromLayerNodeIndex, 
-			int toLayerIndex, int toLayerNodeIndex) {
-		
-		List<Layer> layers = getAllLayers();
-		
-		Layer fromLayer = layers.get(fromLayerIndex);
-		Node fromNode = fromLayer.getNode(fromLayerNodeIndex);
-		
-		Layer toLayer = layers.get(toLayerIndex);
-		Node toNode = toLayer.getNode(toLayerNodeIndex);	
-		
-		List<Connection> connections = toLayer.getConnections();
-		for (Connection connection : connections) {
-			if (connection.from == fromNode &&
-				connection.to == toNode) {
-				toLayer.removeConnection(connection);
-			}
-		}
-	}
-	
-
-	
-	public void addHiddenLayer(Layer layer) {
-		this.hidden.add(layer);
-	}
-	
 	public void calculate() {
-		List<Layer> layers = getAllLayers();
+		List<Layer> layers = getLayers();
 		for (int i = 1; i < layers.size(); i++) {
 			Layer layer = layers.get(i);
 			layer.calculate();
@@ -118,7 +73,7 @@ public class Network {
 	}
 
 	public void clear() {
-		List<Layer> layers = getAllLayers();
+		List<Layer> layers = getLayers();
 		for (int i = 0; i < layers.size(); i++) {
 			Layer layer = layers.get(i);
 			layer.clear();
@@ -127,6 +82,40 @@ public class Network {
 		
 		if (visualizer != null) visualizer.repaint();
 	}	
+
+	public void addConnection(Connection connection) {
+		if (connection.from == null || connection.to == null) return;
+		connections.add(connection);
+		Layer toLayer = connection.to.layer;
+		toLayer.addConnection(connection);
+	}
+	
+	public void removeConnection(Connection connection) {
+		if (connection.from == null || connection.to == null) return;
+		connections.remove(connection);
+		Layer toLayer = connection.to.layer;
+		if (toLayer == null) return;
+		toLayer.removeConnection(connection);
+	}
+	
+	public boolean hasConnection(Connection connection) {
+		return connections.contains(connection);
+	}
+	
+	public Node getNode(int layerIndex, int nodeIndex) {
+		Layer layer = getLayer(layerIndex);
+		if (layer == null) return null;
+		return layer.getNode(nodeIndex);
+	}
+	
+	public Layer getLayer(int layerIndex) {
+		List<Layer> layers = getLayers();
+		if (layerIndex >= layers.size()) return null;
+		
+		Layer layer = layers.get(layerIndex);
+		return layer;
+	}
+	
 	
 	public double[] getOutput() {
 		double[] result = new double[output.size()];
@@ -135,7 +124,7 @@ public class Network {
 		}
 		return result;
 	}
-	
+
 	public Layer getOutputLayer() {
 		return output;
 	}
@@ -157,6 +146,9 @@ public class Network {
 		}
 	}
 	
+	public void addHiddenLayer(Layer layer) {
+		this.hidden.add(layer);
+	}	
 	
 	public void setInput(double[] vals) {
 		if (input.nodes.size() != vals.length) 
@@ -177,7 +169,7 @@ public class Network {
 		return input;
 	}	
 	
-	public List<Layer> getAllLayers() {
+	public List<Layer> getLayers() {
 		List<Layer> layers = new LinkedList<Layer>();
 		layers.add(input);
 		layers.addAll(hidden);
@@ -205,7 +197,7 @@ public class Network {
 		//Copy node, and layers
 		List<Layer> cLayers = new LinkedList<Layer>();
 		Map<Node, Node> mapping = new HashMap<Node, Node>();
-		for (Layer layer : this.getAllLayers()) {
+		for (Layer layer : this.getLayers()) {
 			Layer cLayer = new Layer();
 			for (Node node : layer.getNodes()) {
 				Node cNode = new Node(cLayer, node.activation);
@@ -218,10 +210,9 @@ public class Network {
 		mapping.put(this.bias, cNetwork.bias);
 		
 		//Copy connections
-		List<Layer> layers = getAllLayers();
+		List<Layer> layers = getLayers();
 		for (int i = 0; i < layers.size(); i++) {
 			Layer layer = layers.get(i);
-			Layer cLayer = cLayers.get(i);
 			
 			for (Node node : layer.getNodes()) {
 				for (Connection connection : layer.getConnections(node)) {
@@ -238,9 +229,10 @@ public class Network {
 					}
 					
 					Connection cConnection = new Connection(cFrom, cTo);
+					cConnection.setEnabled(connection.enabled);
 					cConnection.weight = cWeight;
 					
-					cLayer.addConnection(cConnection);
+					cNetwork.addConnection(cConnection);
 				}
 			}
 		}
@@ -265,7 +257,7 @@ public class Network {
 
 	public String toString() {
 		StringBuffer content = new StringBuffer();
-		for (Layer layer : getAllLayers()) {
+		for (Layer layer : getLayers()) {
 			for (Connection connection : layer.getConnections()) {
 				content.append(connection.toString() + System.lineSeparator());
 			}

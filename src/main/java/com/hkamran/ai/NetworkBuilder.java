@@ -40,6 +40,7 @@ public class NetworkBuilder {
 	
 	List<ConnectionRequest> requests = new LinkedList<ConnectionRequest>();
 	private boolean hasVisualizer;
+	private boolean disableConnections = false;
 	
 	private NetworkBuilder(NetworkType type) {
 		this.type = type;
@@ -104,6 +105,12 @@ public class NetworkBuilder {
 		return this;
 	}
 	
+	public NetworkBuilder createAllConnections(boolean disabled) {
+		allConnection = true;
+		disableConnections  = disabled;
+		return this;
+	}
+	
 	public NetworkBuilder createConnection(int fromLayerIndex, int fromNodeIndex, int toLayerIndex, int toNodeIndex, double weight) {
 		ConnectionRequest request = new ConnectionRequest(fromLayerIndex, fromNodeIndex,
 				toLayerIndex, toNodeIndex, weight);
@@ -130,10 +137,10 @@ public class NetworkBuilder {
 		}
 		
 		for (ConnectionRequest request : requests) {
-			Layer fromLayer = network.getAllLayers().get(request.fromLayerIndex);
+			Layer fromLayer = network.getLayers().get(request.fromLayerIndex);
 			Node fromNode = fromLayer.getNode(request.fromNodeIndex);
 			
-			Layer toLayer = network.getAllLayers().get(request.toLayerIndex);
+			Layer toLayer = network.getLayers().get(request.toLayerIndex);
 			Node toNode = toLayer.getNode(request.toNodeIndex);
 			
 			Connection connection = new Connection(fromNode, toNode);
@@ -145,7 +152,7 @@ public class NetworkBuilder {
 		this.settings.apply(network);
 		
 		if (allConnection) {
-			network.createAllConnection();
+			network.createAllConnection(disableConnections ? false : true);
 		}
 		
 		if (hasVisualizer) {
