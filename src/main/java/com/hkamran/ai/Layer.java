@@ -93,6 +93,10 @@ public class Layer {
 			node.clear();
 		}
 	}
+	
+	public void removeConnections() {
+		mapping = new HashMap<Node, Set<Connection>>();
+	}
 
 	public void calculate() {
 		for (Node node : mapping.keySet()) {

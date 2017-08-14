@@ -48,6 +48,8 @@ public class NetworkBuilder {
 			this.network = new BackPropNetwork();
 		} else if (type == NetworkType.NEURAL) {
 			this.network = new Network();
+		} else if (type == NetworkType.EVOLUTION) {
+			this.network = new NeatNetwork();
 		} else {
 			throw new RuntimeException("Not implemented");
 		}

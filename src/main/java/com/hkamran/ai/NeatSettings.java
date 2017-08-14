@@ -2,15 +2,20 @@ package com.hkamran.ai;
 
 public class NeatSettings extends NetworkSettings {
 	
-	double createConnectionChance = 0.05;
-	double removeConnectionChance = 0.1;
-	double createNodeChance = 0.02;
-	double modifyWeightChance = 0.15;
-	double createHiddenLayerChance = 0.01;
+	public double addConnectionChange = 0.05;
+	public double removeConnectionChance = 0.1;
+	public double addNodeChance = 0.5;
+	public double adjustWeightChance = 0.15;
+	public double addLayerChance = 0.01;
 	
 	int maxMutations = 2;
 	double weightMutationStep = 2;
-	int hiddenNodeCap;
-	int hiddenLayerCap;
+	int hiddenNodeCap = 3;
+	int hiddenLayerCap = 2;
+	double adjustmentChange = 0.2;
 	
+	public static NeatSettings create() {
+		return new NeatSettings();
+	}
+
 }

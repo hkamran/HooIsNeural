@@ -23,23 +23,14 @@ public class Network {
 	long seed = System.currentTimeMillis();
 	Random random = new Random(seed);
 	NetworkSettings settings;
+	int hiddenIndex = 0;
 	
 	protected void createAllConnection(boolean enable) {
 		List<Layer> layers = getLayers();
 		
 		int i = 1;
 		do {
-			Layer first = layers.get(i - 1);
-			Layer second = layers.get(i);
-			
-			for (Node firstNode : first.nodes) {
-				for (Node secondNode : second.nodes) {
-					Connection connection = new Connection(firstNode, secondNode);
-					connection.weight = getRandomInt(-1, 1);
-					connection.enabled = enable;
-					addConnection(connection);
-				}
-			}
+			createConnections(i, enable);
 			i++;
 		} while ( i < layers.size());
 		
@@ -50,17 +41,43 @@ public class Network {
 			Layer layer = layers.get(i);
 			for (Node node : layer.nodes) {
 				Connection connection = new Connection(bias, node);
-				connection.weight = getRandomInt(-2, 1);
+				connection.weight = getRandom(-2, 1);
 				connection.enabled = enable;
 				addConnection(connection);
 			}
 		}
 	}
 
-	protected double getRandomInt(int min, int max) {
+	protected List<Connection> createConnections(int index, boolean enable) {
+		List<Layer> layers = getLayers();
+		List<Connection> connections = new LinkedList<Connection>();
+		
+		if (index < 0 || index >= layers.size()) return connections;
+		
+		Layer first = layers.get(index - 1);
+		Layer second = layers.get(index);
+		
+		for (Node firstNode : first.nodes) {
+			for (Node secondNode : second.nodes) {
+				Connection connection = new Connection(firstNode, secondNode);
+				if (hasConnection(connection)) continue;
+				connection.weight = getRandom(-1, 1);
+				connection.enabled = enable;
+				
+				addConnection(connection);
+				connections.add(connection);
+			}
+		}
+		
+		return connections;
+	}
+
+	protected double getRandom(int min, int max) {
 		double result = (random.nextDouble() * (max - min)) + min;
 		return result;
 	}
+	
+
 	
 	public void calculate() {
 		List<Layer> layers = getLayers();
@@ -160,6 +177,7 @@ public class Network {
 	}
 	
 	public void addHiddenLayer(Layer layer) {
+		layer.setLabel("HIDDEN " + ++hiddenIndex);
 		this.hidden.add(layer);
 	}	
 	
@@ -198,7 +216,7 @@ public class Network {
 		this.label = label;
 	}
 	
-	public void setSettings(NetworkSettings settings) {
+	protected void setSettings(NetworkSettings settings) {
 		this.settings = settings;
 	}
 	
@@ -208,8 +226,13 @@ public class Network {
 		this.bias.setInput(1);
 	}
 
+	@Override
 	public Network clone() {
 		Network cNetwork = new Network();
+		return cloneHelper(cNetwork);
+	}
+	
+	protected Network cloneHelper(Network cNetwork) {
 		
 		//Copy node, and layers
 		List<Layer> cLayers = new LinkedList<Layer>();

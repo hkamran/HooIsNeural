@@ -55,6 +55,8 @@ public class XORGateTest {
 				new double[][] {{1, 1}, {1, 0}, {0, 1}, {0, 0}}, 
 				new double[][] {{0}, {1}, {1}, {0}});
 		
+
+		
 		train(network);
 	}
 

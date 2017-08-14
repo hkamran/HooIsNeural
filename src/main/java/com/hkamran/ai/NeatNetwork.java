@@ -1,61 +1,23 @@
 package com.hkamran.ai;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NeatNetwork extends Network {
+public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 
-	List<Genome> genomes = new LinkedList<Genome>();
-	NeatSettings settings;
+	
+	List<Connection> added = new LinkedList<Connection>();
+	List<Connection> removed = new LinkedList<Connection>();
+	int fitness;
 	
 	public NeatNetwork() {
 		super();
 		this.settings = (NeatSettings) super.settings;
 	}
 	
-	class Genome implements Comparable<Genome> {
-		Network network;
-		List<Connection> added = new LinkedList<Connection>();
-		List<Connection> removed = new LinkedList<Connection>();
-		int fitness;
-		
-		public Genome(Network network) {
-			this.network = network;
-			for (Connection connection : network.connections) {
-				if (connection.isEnabled()) {
-					added.add(connection);
-				} else {
-					removed.add(connection);
-				}
-			}
-		}
-		
-		public Genome clone() {
-			Network cNetwork = network.clone();
-			Genome cGenome = new Genome(cNetwork);
-			return cGenome;
-		}
-
-		@Override
-		public int compareTo(Genome genome) {
-			return genome.fitness - this.fitness;
-		}
-		
-	}
-	
 	private void createPopulation(int size) {
-		Collections.sort(genomes);
-		
-		Genome elite = genomes.size() == 0 ? 
-				new Genome(this) : genomes.get(0);
-		
-		for (int i = 0; i < size; i++) {
-			Genome genome = elite.clone();
-			mutate(genome);
-			genomes.add(genome);
-		}
+
 		
 		
 	}
@@ -73,11 +35,111 @@ public class NeatNetwork extends Network {
 	}
 	
 	public void evolve() {
-		
 	}
 	
-	private void mutate(Genome genome) {
+	public void mutate() {
+
+		int mutateCount = 0;
 		
+		if (mutateCount < getSettings().maxMutations
+			&& random.nextDouble() >= getSettings().adjustWeightChance 
+			&& mutateWeight()) {
+			mutateCount++;
+		}
+		
+		if (mutateCount < getSettings().maxMutations
+			&& random.nextDouble() >= getSettings().addConnectionChange
+			&& mutateConnection()) {
+			mutateCount++;
+		}
+		
+
+		if (mutateCount < getSettings().maxMutations
+			&& random.nextDouble() >= getSettings().addNodeChance
+			&& mutateNode()) {
+			mutateCount++;
+		}
+		
+		if (mutateCount < getSettings().maxMutations
+			&& random.nextDouble() >= getSettings().addLayerChance
+			&& mutateLayer()) {
+			mutateCount++;
+		}
+		
+		if (visualizer != null) visualizer.repaint();
 	}
+	
+	public boolean mutateNode() {
+		List<Layer> layers = getHiddenLayers();
+		if (layers.size() == 0) {
+			mutateLayer();
+		}
+		
+		int index = (int) Math.round(getRandom(0, layers.size() - 1));
+		Layer layer = layers.get(index);
+
+		if (layer.size() == getSettings().hiddenNodeCap) return false;
+		layer.addNode(Activations.sigmoid);
+		
+		//createConnections
+		List<Connection> newConnections = new LinkedList<Connection>();
+		
+		newConnections.addAll(createConnections(index + 1, false));
+		newConnections.addAll(createConnections(index + 2, false));
+	
+		for (Connection newConnection : newConnections) {
+			removed.add(newConnection);
+		}		
+
+		return true;
+	}
+
+	public boolean mutateLayer() {
+		if (getHiddenLayers().size() >= getSettings().hiddenLayerCap) return false;
+		Layer layer = new Layer();
+		addHiddenLayer(layer);
+
+		//remove existing 
+		Layer last = getOutputLayer();
+		last.removeConnections();
+		
+		return true;
+	}
+	
+	public boolean mutateConnection() {
+		if (removed.size() == 0) return false;
+		int index = (int) getRandom(0, removed.size() - 1);
+		Connection connection = removed.get(index);
+		connection.setEnabled(true);
+		removed.remove(index);
+		added.add(connection);
+		return true;
+	}
+
+	public boolean mutateWeight() {
+		if (added.size() == 0) return false;
+		int index = (int) getRandom(0, added.size() - 1);
+		Connection connection = added.get(index);
+		double adjustment = getRandom(-1, 1) * getSettings().adjustmentChange;
+		connection.weight += adjustment;
+		return true;
+	}
+	
+	@Override
+	public Network clone() {
+		NeatNetwork neat = new NeatNetwork();
+		return this.cloneHelper(neat);
+	}
+	
+	private NeatSettings getSettings() {
+		return (NeatSettings) settings;
+	}
+	
+
+	@Override
+	public int compareTo(NeatNetwork neat) {
+		return neat.fitness - this.fitness;
+	}
+	
 	
 }
