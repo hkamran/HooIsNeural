@@ -116,15 +116,20 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		int toLayerIndex = getLayerIndex(parent, connection.to.layer);
 		int fromLayerIndex = toLayerIndex - 1;
 		
-		if (fromLayerIndex == -1) return false;
+		if (fromLayerIndex < 0) return false;
 		if (toLayerIndex < 0) return false;
 		
 		int fromNodeIndex = connection.from.getIndex();
 		int toNodeIndex = connection.to.getIndex();
 		
-		if (fromNodeIndex < 0 || toNodeIndex < 0) return false;
+		if (toNodeIndex < 0) return false;
 		
-		Node a = child.getNode(fromLayerIndex, fromNodeIndex);
+		Node a;
+		if (fromLayerIndex >= 0 && connection.from.layer != null) {
+			a = child.getNode(fromLayerIndex, fromNodeIndex);
+		} else {
+			a = child.bias;
+		}
 		Node b = child.getNode(toLayerIndex, toNodeIndex);
 		if (a == null || b == null) return false;
 		
@@ -211,7 +216,6 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	}
 	
 	public boolean mutateConnection() {
-
 		List<Connection> connections = generateAllConnections();
 		if (connections.size() == 0) return false;
 		int index = (int) Math.round(getRandom(0, connections.size() - 1));

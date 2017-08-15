@@ -37,7 +37,8 @@ public class PlayGround {
 				.withBiasNode()
 				.withSettings(
 						NeatSettings
-						.create())
+						.create()
+						.setRandomSeed(3000))
 				.build();	
 
 		NeatNetwork a = (NeatNetwork) network.clone();

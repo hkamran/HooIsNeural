@@ -16,9 +16,22 @@ public class NeatSettings extends NetworkSettings {
 	int hiddenLayerCap = 4;
 	double adjustmentChange = 0.2;
 	Activation activation = Activations.sigmoid;
+	long seed = 3000;
 	
 	public static NeatSettings create() {
 		return new NeatSettings();
 	}
-
+	
+	public NeatSettings setRandomSeed(long seed) {
+		this.seed = seed;
+		return this;
+	}
+	
+	@Override
+	protected void apply(Network network) {
+		if (!(network instanceof NeatNetwork)) return;
+		NeatNetwork nNetwork = (NeatNetwork) network;
+		nNetwork.setRandomSeed(seed);
+	}
+	
 }

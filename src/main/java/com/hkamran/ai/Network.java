@@ -46,8 +46,6 @@ public class Network {
 					Connection connection = new Connection(firstNode, secondNode);
 					if (hasConnection(connection)) continue;
 					connection.weight = getRandom(-1, 1);
-					
-
 					connections.add(connection);
 				}
 			}
@@ -145,6 +143,7 @@ public class Network {
 	}
 	
 	public Node getNode(int layerIndex, int nodeIndex) {
+		if (layerIndex == -1 && hasBias) return bias; 
 		Layer layer = getLayer(layerIndex);
 		if (layer == null) return null;
 		return layer.getNode(nodeIndex);

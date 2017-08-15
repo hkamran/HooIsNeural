@@ -11,6 +11,7 @@ import com.hkamran.ai.BackPropSettings;
 import com.hkamran.ai.Connection;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.NeatNetwork;
+import com.hkamran.ai.NeatSettings;
 import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 import com.hkamran.ai.Node;
@@ -20,6 +21,9 @@ public class CopulateConnectionTest {
 	static NeatNetwork network;
 	static NeatNetwork a;
 	static NeatNetwork b;
+	
+	Node first;
+	Node second;
 	
 	@BeforeClass
 	public static void xorTest() throws InterruptedException {
@@ -41,51 +45,64 @@ public class CopulateConnectionTest {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
-				.withVisualizer()
 				.withSettings(
-						BackPropSettings
+						NeatSettings
 						.create()
-						.setLearningRate(0.04)
 						.setRandomSeed(3000))
 				.build();		
-
-		Node first;
-		Node second;
+	}
+	
+	
+	@Test
+	public void testConnectionBetweenLayers() throws InterruptedException {
 		
 		a = (NeatNetwork) network.clone();
 		first = a.getNode(0, 0);
 		second = a.getNode(1, 0);
 		a.addConnection(first, second, 1.0);
-		
-		Visualizer aV = new Visualizer(a);
-		a.setVisualizer(aV);
-		
+
 		b = (NeatNetwork) network.clone();
 		first = b.getNode(0, 1);
 		second = b.getNode(1, 1);
 		b.addConnection(first, second, -1.0);
-		
-		Visualizer bV = new Visualizer(b);
-		b.setVisualizer(bV);
-		
-		
-	}
-	
-	
-	@Test
-	public void testConnection() throws InterruptedException {
-		
+
 		NeatNetwork c = (NeatNetwork) network.clone();		
-		Visualizer cV = new Visualizer(c);
-		c.setVisualizer(cV);
 		c.copulateConnections(a, b, c);
 		
+		//Assertion
+		
 		List<Connection> connections = c.getConnections();
+		Assert.assertTrue(connections.size() == 1);	
 		
 		Connection connection = connections.get(0);
 		
-		Assert.assertTrue(connections.size() == 1);
 		Assert.assertTrue(connection.getFrom() == c.getNode(0, 1));
 		Assert.assertTrue(connection.getTo() == c.getNode(1, 1));
+	}
+	
+	@Test
+	public void testConnectionBetweenBias() {
+		a = (NeatNetwork) network.clone();
+		first = a.getNode(-1, 0);
+		second = a.getNode(1, 0);
+		a.addConnection(first, second, 1.0);
+		
+		b = (NeatNetwork) network.clone();
+		first = b.getNode(-1, 0);
+		second = b.getNode(1, 0);
+		b.addConnection(first, second, -1.0);
+		
+		NeatNetwork c = (NeatNetwork) network.clone();		
+		c.copulateConnections(a, b, c);
+		
+		//Assert
+		
+		List<Connection> connections = c.getConnections();
+		Assert.assertTrue(connections.size() == 1);
+		
+		Connection connection = connections.get(0);
+		
+		Assert.assertTrue(connection.getFrom() == c.getNode(-1, 0));
+	
 	}
 }
