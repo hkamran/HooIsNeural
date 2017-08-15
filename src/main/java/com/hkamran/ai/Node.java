@@ -19,7 +19,7 @@ public class Node {
 		this.layer = layer;
 		this.activation = activation;
 		this.id = IdCounter++;
-		this.index = this.layer.size();
+		this.index = (layer != null) ? this.layer.size() : -1;
 		this.label = "Node " + (layer == null ? unknownCounter++ : this.layer.size());
 	}
 	

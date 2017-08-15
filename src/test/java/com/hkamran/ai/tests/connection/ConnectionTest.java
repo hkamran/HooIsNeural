@@ -18,8 +18,6 @@ public class ConnectionTest {
 		Node b = new Node(null, Activations.sigmoid);
 		
 		Connection c1 = new Connection(a, b, 0.0);
-		Connection c2 = new Connection(b, a, 0.0);
-		
 		
 		Set<Connection> set = new HashSet<Connection>();
 		set.add(c1);

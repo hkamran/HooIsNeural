@@ -1,10 +1,8 @@
 package com.hkamran.ai;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 
@@ -22,7 +20,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		this.settings = (NeatSettings) super.settings;
 	}
 	
-	private void createPopulation(int size) {
+	public void createPopulation(int size) {
 		for (int i = 0; i < size; i++) {
 			NeatNetwork network = (NeatNetwork) this.clone();
 			network.mutate();
@@ -34,8 +32,16 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		
 	}
 	
-	private NeatNetwork copulate(NeatNetwork network) {
+	public NeatNetwork copulate(NeatNetwork network) {
 		NeatNetwork child = new NeatNetwork();
+		
+		Layer input = new Layer("INPUT");
+		input.addNodes(network.input.size(), getSettings().activation);
+		Layer output = new Layer("OUTPUT");
+		output.addNodes(network.output.size(), getSettings().activation);
+		
+		child.setInputLayer(input);		
+		child.setOutputLayer(output);
 		
 		copulateLayers(this, network, child);
 		copulateNodes(this, network, child);
@@ -43,6 +49,8 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		
 		child.setSettings(this.settings);
 		child.createAllConnection(false);
+		
+		if (child.visualizer != null) visualizer.repaint();
 		
 		return child;
 	}
@@ -85,38 +93,43 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		List<Connection> fatherConnections = new LinkedList<Connection>(father.added);
 		List<Connection> motherConnections = new LinkedList<Connection>(mother.added);
 		
-		int count = (fatherConnections.size() / 2) + (motherConnections.size() / 2);
+		int expected = (fatherConnections.size() / 2) + (motherConnections.size() / 2);
+		int count = 0;
 		
-		for (int i = 0; i < count; i++) {
+		while (count < expected && fatherConnections.size() + motherConnections.size() >= expected) {
 			int chance = (int) Math.round(getRandom(0, 1));
 			if (chance > 0.5 && fatherConnections.size() > 0) {
 				int index = (int) Math.round(getRandom(0, fatherConnections.size() - 1));
 				Connection connection = father.added.get(index);
-				copulateInsertConnection(connection, child);
-			} else if (chance <= 0.5 && motherConnections.size() > 0){
+				boolean result = copulateInsertConnection(father, connection, child);
+				fatherConnections.remove(index);
+				if (result) count++;
+			} else if (chance <= 0.5 && motherConnections.size() > 0) {
 				int index = (int) Math.round(getRandom(0, motherConnections.size() - 1));
 				Connection connection = mother.added.get(index);
-				copulateInsertConnection(connection, child);				
+				boolean result = copulateInsertConnection(mother, connection, child);
+				motherConnections.remove(index);
+				if (result) count++;
 			}
 		}
-		
 	}
 	
-	private void copulateInsertConnection(Connection connection, NeatNetwork child) {
-		int fromLayerIndex = getLayerIndex(child, connection.from.layer);
+	private boolean copulateInsertConnection(NeatNetwork parent, Connection connection, NeatNetwork child) {
+		int fromLayerIndex = getLayerIndex(parent, connection.from.layer);
 		int toLayerIndex = fromLayerIndex - 1;
 		
-		if (fromLayerIndex == -1) return;
-		if (toLayerIndex < 0) return;
+		if (fromLayerIndex == -1) return false;
+		if (toLayerIndex < 0) return false;
 		
 		int fromNodeIndex = connection.from.getIndex();
 		int toNodeIndex = connection.to.getIndex();
 		
 		Node a = child.getNode(fromLayerIndex, fromNodeIndex);
 		Node b = child.getNode(toLayerIndex, toNodeIndex);
-		if (a == null || b == null) return;
+		if (a == null || b == null) return false;
 		
-		child.addConnection(a, b);
+		
+		return child.addConnection(b, a, connection.weight) != null;
 	}
 
 	public void train() {
@@ -199,6 +212,9 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		Layer last = getOutputLayer();
 		last.removeConnections();
 		
+		mutateNode();
+		mutateConnection();
+		
 		return true;
 	}
 	
@@ -224,6 +240,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	@Override
 	public Network clone() {
 		NeatNetwork neat = new NeatNetwork();
+		neat.setSettings(settings);
 		return this.cloneHelper(neat);
 	}
 	

@@ -117,11 +117,19 @@ public class Network {
 		connections.add(connection);
 		Layer toLayer = connection.to.layer;
 		toLayer.addConnection(connection);
+		
+		if (visualizer != null) visualizer.repaint();
 		return connection;
 	}
 	
 	public Connection addConnection(Node a, Node b) {
 		Connection connection = new Connection(a, b, getRandom(-1, 1));
+		this.addConnection(connection);
+		return connection;
+	}
+	
+	public Connection addConnection(Node a, Node b, double weight) {
+		Connection connection = new Connection(a, b, weight);
 		this.addConnection(connection);
 		return connection;
 	}
