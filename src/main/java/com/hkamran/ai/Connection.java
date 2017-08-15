@@ -5,7 +5,7 @@ public class Connection {
 	public double weight;
 	Node from;
 	Node to;
-	boolean enabled = true;
+
 	
 	public Connection(Node from, Node to) {
 		this.from = from;
@@ -46,12 +46,12 @@ public class Connection {
 		return false;
 	}
 	
-	public boolean isEnabled() {
-		return enabled;
+	public Node getFrom() {
+		return from;
 	}
 	
-	public void setEnabled(boolean val) {
-		this.enabled = val;
+	public Node getTo() {
+		return to;
 	}
 	
 }

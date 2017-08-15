@@ -14,6 +14,8 @@ import com.hkamran.ai.Visualizer;
 public class PlayGround {
 
 	static NeatNetwork network;
+	
+	
 	public static void main(String[] args) throws InterruptedException {
 		network = 
 				(NeatNetwork) NetworkBuilder
@@ -33,7 +35,6 @@ public class PlayGround {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
-				.createAllConnections(true)
 				.withSettings(
 						NeatSettings
 						.create())
@@ -55,6 +56,7 @@ public class PlayGround {
 		NeatNetwork c = a.copulate(b);
 		Visualizer cV = new Visualizer(c);
 		c.setVisualizer(cV);
+
 		
 		testViaUserInput(network);
 	}

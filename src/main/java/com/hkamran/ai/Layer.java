@@ -103,7 +103,6 @@ public class Layer {
 		for (Node node : mapping.keySet()) {
 			Set<Connection> connections = mapping.get(node);
 			for (Connection connection : connections) {
-				if (!connection.isEnabled()) continue;
 				
 				Node from = connection.from;
 				Node to = connection.to;
@@ -135,7 +134,11 @@ public class Layer {
 	public List<Connection> getConnections() {
 		List<Connection> totalConnections = new LinkedList<Connection>();
 		for (Node node : mapping.keySet()) {
+			
 			Set<Connection> connections = mapping.get(node);
+			if (connections == null) {
+				connections = new HashSet<Connection>();
+			}
 			for (Connection connection : connections) {
 				totalConnections.add(connection);
 			}

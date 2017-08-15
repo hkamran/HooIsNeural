@@ -7,8 +7,7 @@ import java.util.List;
 public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 
 	
-	List<Connection> added = new LinkedList<Connection>();
-	List<Connection> removed = new LinkedList<Connection>();
+
 	int fitness;
 	
 	List<NeatNetwork> population = new LinkedList<NeatNetwork>();
@@ -48,7 +47,6 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		copulateConnections(this, network, child);
 		
 		child.setSettings(this.settings);
-		child.createAllConnection(false);
 		
 		if (child.visualizer != null) visualizer.repaint();
 		
@@ -89,9 +87,9 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		}
 	}
 	
-	private void copulateConnections(NeatNetwork father, NeatNetwork mother, NeatNetwork child) {
-		List<Connection> fatherConnections = new LinkedList<Connection>(father.added);
-		List<Connection> motherConnections = new LinkedList<Connection>(mother.added);
+	public void copulateConnections(NeatNetwork father, NeatNetwork mother, NeatNetwork child) {
+		List<Connection> fatherConnections = new LinkedList<Connection>(father.getConnections());
+		List<Connection> motherConnections = new LinkedList<Connection>(mother.getConnections());
 		
 		int expected = (fatherConnections.size() + motherConnections.size()) / 2;
 		int count = 0;
@@ -100,13 +98,13 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 			int chance = (int) Math.round(getRandom(0, 1));
 			if (chance > 0.5 && fatherConnections.size() > 0) {
 				int index = (int) Math.round(getRandom(0, fatherConnections.size() - 1));
-				Connection connection = father.added.get(index);
+				Connection connection = fatherConnections.get(index);
 				boolean result = copulateInsertConnection(father, connection, child);
 				fatherConnections.remove(index);
 				if (result) count++;
 			} else if (chance <= 0.5 && motherConnections.size() > 0) {
 				int index = (int) Math.round(getRandom(0, motherConnections.size() - 1));
-				Connection connection = mother.added.get(index);
+				Connection connection = motherConnections.get(index);
 				boolean result = copulateInsertConnection(mother, connection, child);
 				motherConnections.remove(index);
 				if (result) count++;
@@ -131,7 +129,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		if (a == null || b == null) return false;
 		
 		Connection cChild = child.addConnection(a, b, connection.weight);
-		cChild.enabled = true;
+
 		return cChild != null;
 	}
 
@@ -193,15 +191,6 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		if (layer.size() == getSettings().hiddenNodeCap) return false;
 		layer.addNode(Activations.sigmoid);
 		
-		//createConnections
-		List<Connection> newConnections = new LinkedList<Connection>();
-		
-		newConnections.addAll(createConnections(index + 1, false));
-		newConnections.addAll(createConnections(index + 2, false));
-	
-		for (Connection newConnection : newConnections) {
-			removed.add(newConnection);
-		}		
 
 		return true;
 	}
@@ -222,19 +211,20 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	}
 	
 	public boolean mutateConnection() {
-		if (removed.size() == 0) return false;
-		int index = (int) Math.round(getRandom(0, removed.size() - 1));
-		Connection connection = removed.get(index);
-		connection.setEnabled(true);
-		removed.remove(index);
-		added.add(connection);
+
+		List<Connection> connections = generateAllConnections();
+		if (connections.size() == 0) return false;
+		int index = (int) Math.round(getRandom(0, connections.size() - 1));
+		Connection connection = connections.get(index);
+		addConnection(connection);
 		return true;
 	}
 
 	public boolean mutateWeight() {
-		if (added.size() == 0) return false;
-		int index = (int) Math.round(getRandom(0, added.size() - 1));
-		Connection connection = added.get(index);
+		List<Connection> connections = getConnections();
+		if (connections.size() == 0) return false;
+		int index = (int) Math.round(getRandom(0, connections.size() - 1));
+		Connection connection = connections.get(index);
 		double adjustment = getRandom(-1, 1) * getSettings().adjustmentChange;
 		connection.weight += adjustment;
 		return true;
@@ -266,15 +256,6 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		return -1;
 	}
 	
-	@Override
-	public Connection addConnection(Connection connection) {
-		if (connection.enabled) {
-			this.added.add(connection);
-		} else {
-			this.removed.add(connection);
-		}
-		super.addConnection(connection);
-		return connection;
-	}
+
 	
 }

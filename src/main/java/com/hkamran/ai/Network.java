@@ -25,16 +25,36 @@ public class Network {
 	NetworkSettings settings;
 	int hiddenIndex = 0;
 	
-	protected void createAllConnection(boolean enable) {
+	protected void createAllConnections() {
+		List<Connection> connections = generateAllConnections();
+		for (Connection connection : connections) {
+			addConnection(connection);
+		}
+	}
+	
+	protected List<Connection> generateAllConnections() {
 		List<Layer> layers = getLayers();
+		List<Connection> connections = new LinkedList<Connection>();
 		
 		int i = 1;
 		do {
-			createConnections(i, enable);
+			Layer first = layers.get(i - 1);
+			Layer second = layers.get(i);
+			
+			for (Node firstNode : first.nodes) {
+				for (Node secondNode : second.nodes) {
+					Connection connection = new Connection(firstNode, secondNode);
+					if (hasConnection(connection)) continue;
+					connection.weight = getRandom(-1, 1);
+					
+
+					connections.add(connection);
+				}
+			}
 			i++;
 		} while ( i < layers.size());
 		
-		if (!hasBias) return;
+		if (!hasBias) return connections;
 		
 		//bias setup
 		for (i = 1; i < layers.size() - 1; i++) {
@@ -42,29 +62,6 @@ public class Network {
 			for (Node node : layer.nodes) {
 				Connection connection = new Connection(bias, node);
 				connection.weight = getRandom(-2, 1);
-				connection.enabled = enable;
-				addConnection(connection);
-			}
-		}
-	}
-
-	protected List<Connection> createConnections(int index, boolean enable) {
-		List<Layer> layers = getLayers();
-		List<Connection> connections = new LinkedList<Connection>();
-		
-		if (index < 0 || index >= layers.size()) return connections;
-		
-		Layer first = layers.get(index - 1);
-		Layer second = layers.get(index);
-		
-		for (Node firstNode : first.nodes) {
-			for (Node secondNode : second.nodes) {
-				Connection connection = new Connection(firstNode, secondNode);
-				if (hasConnection(connection)) continue;
-				connection.weight = getRandom(-1, 1);
-				connection.enabled = enable;
-				
-				addConnection(connection);
 				connections.add(connection);
 			}
 		}
@@ -284,7 +281,6 @@ public class Network {
 					}
 					
 					Connection cConnection = new Connection(cFrom, cTo);
-					cConnection.setEnabled(connection.enabled);
 					cConnection.weight = cWeight;
 					
 					cNetwork.addConnection(cConnection);

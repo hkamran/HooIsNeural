@@ -51,7 +51,7 @@ public class Node {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		return ("NODE: " + this.id).hashCode();
 	}
 	
 	@Override
