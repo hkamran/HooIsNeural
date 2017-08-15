@@ -320,4 +320,24 @@ public class Network {
 		this.seed = seed;
 		random = new Random(seed);
 	}
+	
+	public void become(Network network) {
+		this.hidden = network.hidden;
+		this.input = network.input;
+		this.output = network.output;
+		this.visualizer = network.visualizer;
+		this.connections = network.connections;
+		
+		this.hasBias = network.hasBias;
+		this.label = network.label;
+		this.seed = network.seed;
+		this.random = network.random;
+		this.settings = network.settings;
+		this.hiddenIndex = network.hiddenIndex;
+		
+		if (visualizer != null) {
+			visualizer.network = this;
+			visualizer.repaint();
+		}
+	}
 }

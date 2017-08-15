@@ -81,6 +81,12 @@ public class Visualizer extends JComponent {
 		
 		g2.setColor(Color.WHITE);
 		g2.fillOval(30, 5, 10, 10);
+		
+		Network network;
+		synchronized (this.network) {
+			network = this.network;
+		}
+		if (network == null) return;
 		map.put(network.bias, new Point(21, 11));
 		
 		int x = 25;
@@ -136,6 +142,7 @@ public class Visualizer extends JComponent {
 
 				float width = (float) (2 + Math.abs(0.02 * connection.weight));
                 g2.setStroke(new BasicStroke(width));
+                if (from  == null) return;
                 g2.draw(new Line2D.Float(from.x + 14,from.y + 5, to.x - 5, to.y + 5));
 			}
 		}

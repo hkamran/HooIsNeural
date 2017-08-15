@@ -5,13 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
-
 	
-
 	int fitness;
+	int size;
 	
 	List<NeatNetwork> population = new LinkedList<NeatNetwork>();
-
+	NeatFitness trainer;
 	
 	public NeatNetwork() {
 		super();
@@ -19,16 +18,21 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		this.settings = (NeatSettings) super.settings;
 	}
 	
-	public void createPopulation(int size) {
+	public void setPopulationSize(int size) {
+		this.size = size;
+	}
+	
+	private void createPopulation(NeatNetwork network) {
+		population = new LinkedList<NeatNetwork>();
 		for (int i = 0; i < size; i++) {
-			NeatNetwork network = (NeatNetwork) this.clone();
-			network.mutate();
-			population.add(network);
+			NeatNetwork cNetwork = (NeatNetwork) network.clone();
+			cNetwork.mutate();
+			population.add(cNetwork);
 		}
 	}
 	
-	public void setFitness() {
-		
+	public void setFitness(NeatFitness fitness) {
+		this.trainer = fitness;
 	}
 	
 	public NeatNetwork copulate(NeatNetwork network) {
@@ -138,8 +142,28 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		return cChild != null;
 	}
 
-	public void train() {
+	public void train(int generation) {
+		if (trainer == null) return;
+		if (size < 1) return;
 		
+		if (population.size() < size) {
+			createPopulation(this);
+		}
+		
+		for (int i = 0; i < generation; i++) {
+			for (NeatNetwork person : population) {
+				double fitness = trainer.calculate(person);
+				person.fitness = (int) fitness;
+			}
+		}
+		
+		NeatNetwork result = evolve();
+		result.trainer = this.trainer;
+		result.size = this.size;
+		result.visualizer = this.visualizer;
+		
+		result.fitness = (int) trainer.calculate(result);
+		this.become(result);
 	}
 	
 	public NeatNetwork evolve() {
@@ -260,6 +284,19 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		return -1;
 	}
 	
-
+	@Override
+	public void become(Network network) {
+		if (!(network instanceof NeatNetwork)) return;
+		NeatNetwork neat = (NeatNetwork) network;
+		this.size = neat.size;
+		this.fitness = neat.fitness;
+		this.trainer = neat.trainer;
+		super.become(network);
+		
+	}
+	
+	public int getFitness() {
+		return fitness;
+	}
 	
 }
