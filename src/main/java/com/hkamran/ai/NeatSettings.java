@@ -4,13 +4,13 @@ import com.hkamran.ai.Activations.Activation;
 
 public class NeatSettings extends NetworkSettings {
 	
-	public double addConnectionChange = 0.5;
-	public double addNodeChance = 0.5;
-	public double adjustWeightChance = 0.15;
-	public double addLayerChance = 0.01;
+	public double addConnectionChange = 1;
+	public double addNodeChance = 0.9;
+	public double adjustWeightChance = 0.9;
+	public double addLayerChance = 0.9;
 	
-	int maxMutations = 10;
-	double weightMutationStep = 2;
+	int maxMutations = 2;
+	double weightMutationStep = 1;
 	int hiddenNodeCap = 2;
 	int hiddenLayerCap = 1;
 	double adjustmentChange = 0.2;
@@ -23,6 +23,16 @@ public class NeatSettings extends NetworkSettings {
 	
 	public NeatSettings setRandomSeed(long seed) {
 		this.seed = seed;
+		return this;
+	}
+	
+	public NeatSettings setHiddenNodeCap(int num) {
+		this.hiddenNodeCap = num;
+		return this;
+	}
+	
+	public NeatSettings setHiddenLayerCap(int num) {
+		this.hiddenLayerCap = num;
 		return this;
 	}
 	

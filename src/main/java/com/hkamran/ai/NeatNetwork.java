@@ -6,7 +6,7 @@ import java.util.List;
 
 public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	
-	int fitness;
+	double fitness;
 	int size;
 	
 	List<NeatNetwork> population = new LinkedList<NeatNetwork>();
@@ -153,7 +153,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		for (int i = 0; i < generation; i++) {
 			for (NeatNetwork person : population) {
 				double fitness = trainer.calculate(person);
-				person.fitness = (int) fitness;
+				person.fitness = fitness;
 			}
 		}
 		
@@ -161,8 +161,13 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		result.trainer = this.trainer;
 		result.size = this.size;
 		result.visualizer = this.visualizer;
+		result.hasBias = this.hasBias;
+		result.label = this.label;
+		result.seed = this.seed;
+		result.random = this.random;
+		result.settings = this.settings;
+		result.fitness = trainer.calculate(result);
 		
-		result.fitness = (int) trainer.calculate(result);
 		this.become(result);
 	}
 	
@@ -181,28 +186,38 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 
 		int mutateCount = 0;
 		while (mutateCount < getSettings().maxMutations) {
+			boolean hasMutate = false;
+			
 			if (mutateCount < getSettings().maxMutations
-				&& random.nextDouble() >= getSettings().adjustWeightChance 
+				&& random.nextDouble() <= getSettings().adjustWeightChance 
 				&& mutateWeight()) {
 				mutateCount++;
-			}
+				hasMutate = true;
+			} 
 			
 			if (mutateCount < getSettings().maxMutations
-				&& random.nextDouble() >= getSettings().addConnectionChange
+				&& random.nextDouble() <= getSettings().addConnectionChange
 				&& mutateConnection()) {
 				mutateCount++;
-			}
-	
-			if (mutateCount < getSettings().maxMutations
-				&& random.nextDouble() >= getSettings().addNodeChance
-				&& mutateNode()) {
-				mutateCount++;
-			}
+				hasMutate = true;
+			} 
 			
 			if (mutateCount < getSettings().maxMutations
-				&& random.nextDouble() >= getSettings().addLayerChance
+				&& random.nextDouble() <= getSettings().addNodeChance
+				&& mutateNode()) {
+				mutateCount++;
+				hasMutate = true;
+			}  
+			
+			if (mutateCount < getSettings().maxMutations
+				&& random.nextDouble() <= getSettings().addLayerChance
 				&& mutateLayer()) {
 				mutateCount++;
+				hasMutate = true;
+			} 
+			
+			if (!hasMutate){
+				throw new RuntimeException("Cant mutate!");
 			}
 		}
 		if (visualizer != null) visualizer.repaint();
@@ -272,7 +287,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 
 	@Override
 	public int compareTo(NeatNetwork neat) {
-		return neat.fitness - this.fitness;
+		return (int) Math.round(neat.fitness - this.fitness);
 	}
 	
 	private int getLayerIndex(NeatNetwork network, Layer layer) {
@@ -295,7 +310,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		
 	}
 	
-	public int getFitness() {
+	public double getFitness() {
 		return fitness;
 	}
 	

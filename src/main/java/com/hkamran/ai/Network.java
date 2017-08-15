@@ -18,7 +18,7 @@ public class Network {
 	Visualizer visualizer;
 	public Set<Connection> connections = new HashSet<Connection>();
 	
-	boolean hasBias;
+	public boolean hasBias;
 	String label;
 	long seed = System.currentTimeMillis();
 	Random random = new Random(seed);
@@ -59,7 +59,7 @@ public class Network {
 			Layer layer = layers.get(i);
 			for (Node node : layer.nodes) {
 				Connection connection = new Connection(bias, node);
-				connection.weight = getRandom(-2, 1);
+				connection.weight = getRandom(-1, 1);
 				connections.add(connection);
 			}
 		}
