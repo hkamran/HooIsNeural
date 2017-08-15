@@ -1,5 +1,7 @@
 package com.hkamran.ai;
 
+import com.hkamran.ai.Activations.Activation;
+
 public class NeatSettings extends NetworkSettings {
 	
 	public double addConnectionChange = 0.05;
@@ -10,9 +12,10 @@ public class NeatSettings extends NetworkSettings {
 	
 	int maxMutations = 2;
 	double weightMutationStep = 2;
-	int hiddenNodeCap = 3;
-	int hiddenLayerCap = 2;
+	int hiddenNodeCap = 10;
+	int hiddenLayerCap = 4;
 	double adjustmentChange = 0.2;
+	Activation activation = Activations.sigmoid;
 	
 	public static NeatSettings create() {
 		return new NeatSettings();

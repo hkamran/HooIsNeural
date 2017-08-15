@@ -111,12 +111,19 @@ public class Network {
 		return new LinkedList<Connection>(connections);
 	}
 
-	public void addConnection(Connection connection) {
-		if (connection.from == null || connection.to == null) return;
-		if (connections.contains(connection)) return;
+	public Connection addConnection(Connection connection) {
+		if (connection.from == null || connection.to == null) return null;
+		if (connections.contains(connection)) return null;
 		connections.add(connection);
 		Layer toLayer = connection.to.layer;
 		toLayer.addConnection(connection);
+		return connection;
+	}
+	
+	public Connection addConnection(Node a, Node b) {
+		Connection connection = new Connection(a, b, getRandom(-1, 1));
+		this.addConnection(connection);
+		return connection;
 	}
 	
 	public void removeConnection(Connection connection) {

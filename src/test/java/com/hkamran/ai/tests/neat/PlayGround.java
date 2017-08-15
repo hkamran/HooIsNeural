@@ -33,15 +33,8 @@ public class PlayGround {
 						NeatSettings
 						.create())
 				.createAllConnections()
-				.build();		
-		Layer last;
-		network.mutateLayer();	
-		last = network.getHiddenLayers().get(network.getHiddenLayers().size() - 1);
+				.build();	
 
-		network.mutateLayer();	
-		last = network.getHiddenLayers().get(network.getHiddenLayers().size() - 1);
-
-		network.mutateNode();	
 
 		testViaUserInput(network);
 	}
@@ -54,7 +47,7 @@ public class PlayGround {
 			System.out.println("MUTATE " + (i++));
 			//network.mutate();
 			network.mutate();	
-			Thread.sleep(700);
+			Thread.sleep(50);
 		}
 	}
 }

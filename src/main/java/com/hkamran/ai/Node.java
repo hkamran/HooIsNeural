@@ -10,6 +10,7 @@ public class Node {
 	private double input = 0;
 	public double error = 0;
 	private final int id;
+	private final int index;
 	public Layer layer;
 	public String label;
 	public Activation activation;
@@ -18,6 +19,7 @@ public class Node {
 		this.layer = layer;
 		this.activation = activation;
 		this.id = IdCounter++;
+		this.index = this.layer.size();
 		this.label = "Node " + (layer == null ? unknownCounter++ : this.layer.size());
 	}
 	
@@ -76,7 +78,11 @@ public class Node {
 		return label;
 	}
 	
-	public Integer getId() {
+	public Integer getIndex() {
+		return index;
+	}
+	
+	protected Integer getId() {
 		return id;
 	}
 	

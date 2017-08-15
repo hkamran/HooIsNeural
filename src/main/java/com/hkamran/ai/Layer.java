@@ -14,6 +14,7 @@ public class Layer {
 	List<Node> nodes = new LinkedList<Node>();
 	String label;
 
+
 	Map<Node, Set<Connection>> mapping = new HashMap<Node, Set<Connection>>();
 
 	public Layer(String label) {
