@@ -124,9 +124,7 @@ public class NetworkBuilder {
 		
 		if (input == null || output == null) 
 			throw new RuntimeException("Missing Input/Output layer!");
-		if (!allConnection && requests.size() == 0) {
-			throw new RuntimeException("No Connection has been made!");
-		}
+
 		
 		network.setInputLayer(input);
 		for (Layer layer : hidden) {

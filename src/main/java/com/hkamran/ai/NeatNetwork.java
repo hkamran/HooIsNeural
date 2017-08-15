@@ -10,13 +10,13 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	List<Connection> added = new LinkedList<Connection>();
 	List<Connection> removed = new LinkedList<Connection>();
 	int fitness;
-
-
+	
 	List<NeatNetwork> population = new LinkedList<NeatNetwork>();
 
 	
 	public NeatNetwork() {
 		super();
+		this.seed = 3000;
 		this.settings = (NeatSettings) super.settings;
 	}
 	
@@ -93,7 +93,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		List<Connection> fatherConnections = new LinkedList<Connection>(father.added);
 		List<Connection> motherConnections = new LinkedList<Connection>(mother.added);
 		
-		int expected = (fatherConnections.size() / 2) + (motherConnections.size() / 2);
+		int expected = (fatherConnections.size() + motherConnections.size()) / 2;
 		int count = 0;
 		
 		while (count < expected && fatherConnections.size() + motherConnections.size() >= expected) {
@@ -115,8 +115,8 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	}
 	
 	private boolean copulateInsertConnection(NeatNetwork parent, Connection connection, NeatNetwork child) {
-		int fromLayerIndex = getLayerIndex(parent, connection.from.layer);
-		int toLayerIndex = fromLayerIndex - 1;
+		int toLayerIndex = getLayerIndex(parent, connection.to.layer);
+		int fromLayerIndex = toLayerIndex - 1;
 		
 		if (fromLayerIndex == -1) return false;
 		if (toLayerIndex < 0) return false;
@@ -124,12 +124,15 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		int fromNodeIndex = connection.from.getIndex();
 		int toNodeIndex = connection.to.getIndex();
 		
+		if (fromNodeIndex < 0 || toNodeIndex < 0) return false;
+		
 		Node a = child.getNode(fromLayerIndex, fromNodeIndex);
 		Node b = child.getNode(toLayerIndex, toNodeIndex);
 		if (a == null || b == null) return false;
 		
-		
-		return child.addConnection(b, a, connection.weight) != null;
+		Connection cChild = child.addConnection(a, b, connection.weight);
+		cChild.enabled = true;
+		return cChild != null;
 	}
 
 	public void train() {
@@ -261,6 +264,17 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 			if (curr == layer) return i;
 		}
 		return -1;
+	}
+	
+	@Override
+	public Connection addConnection(Connection connection) {
+		if (connection.enabled) {
+			this.added.add(connection);
+		} else {
+			this.removed.add(connection);
+		}
+		super.addConnection(connection);
+		return connection;
 	}
 	
 }

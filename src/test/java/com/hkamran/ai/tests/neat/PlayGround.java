@@ -8,6 +8,7 @@ import com.hkamran.ai.NeatNetwork;
 import com.hkamran.ai.NeatSettings;
 import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
+import com.hkamran.ai.Node;
 import com.hkamran.ai.Visualizer;
 
 public class PlayGround {
@@ -22,28 +23,32 @@ public class PlayGround {
 						LayerBuilder
 						.create()
 						.addNodes(2, Activations.sigmoid))
+				.addHiddenLayer(						
+						LayerBuilder
+						.create()
+						.addNodes(2, Activations.sigmoid))
 				.setOutputLayer(
 						LayerBuilder
 						.create()
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
-
+				.createAllConnections(true)
 				.withSettings(
 						NeatSettings
 						.create())
-				.createAllConnections()
 				.build();	
 
 		NeatNetwork a = (NeatNetwork) network.clone();
-		a.mutate();
-		a.mutate();
+		a.mutateConnection();
+		a.mutateConnection();
+		a.mutateConnection();
 		Visualizer aV = new Visualizer(a);
 		a.setVisualizer(aV);
 		
 		NeatNetwork b = (NeatNetwork) network.clone();
-		b.mutate();
-		b.mutate();
+		b.mutateConnection();
+		b.mutateConnection();
 		Visualizer bV = new Visualizer(b);
 		b.setVisualizer(bV);
 		
