@@ -1,5 +1,5 @@
 # HooIsNeural
-Neural Networks implemented in Java
+A Java implementation of NEAT, Feed-Forward, and back-propogating neural networks.
 
 ## Screenshots
 <div align="center">
