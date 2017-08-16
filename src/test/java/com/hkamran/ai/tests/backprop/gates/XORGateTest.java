@@ -38,7 +38,6 @@ public class XORGateTest {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
-				.withVisualizer()
 				.withSettings(
 						BackPropSettings
 						.create()

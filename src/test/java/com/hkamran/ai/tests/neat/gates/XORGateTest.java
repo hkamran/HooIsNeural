@@ -54,8 +54,6 @@ public class XORGateTest {
 						.setPopulationSize(500))
 				.build();	
 		
-		visualizer = new Visualizer(network);
-		network.setVisualizer(visualizer);
 		train(network);		
 	}
 	
@@ -67,7 +65,9 @@ public class XORGateTest {
 		while (network.getFitness() < 3.5) {
 			network = network.train();
 			if (visualizer != null) visualizer.network = network;
-			System.out.println("FITNESS" + network.getFitness() + " " + generation);
+			if (generation % 10 == 0) {
+				System.out.println("Generation: " + String.format("%05d", generation) + " Fitness: " + network.getFitness());
+			}
 			generation++;
 			if (generation > TRAINING_LIMIT) {
 				throw new RuntimeException("Unable to evolve!");

@@ -104,14 +104,11 @@ public class CopulateConnectionTest {
 	public void testTransferOfAllConnection() {
 		a = (NeatNetwork) network.clone();
 		a.createAllConnections();
-		a.withVisualizer();
 		
 		b = (NeatNetwork) network.clone();
 		b.createAllConnections();
-		b.withVisualizer();
 		
-		NeatNetwork c = (NeatNetwork) network.clone();	
-		c.withVisualizer();	
+		NeatNetwork c = (NeatNetwork) network.clone();
 		c.copulateConnections(a, b, c);
 		
 		//Assert

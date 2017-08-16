@@ -13,7 +13,7 @@ public class MutateConnectionTest {
 	static NeatNetwork network;
 	
 	@BeforeClass
-	public static void xorTest() throws InterruptedException {
+	public static void beforeClassSetup() throws InterruptedException {
 		network = 
 				(NeatNetwork) NetworkBuilder
 				.create(NetworkType.EVOLUTION)
@@ -32,7 +32,6 @@ public class MutateConnectionTest {
 						.addNodes(1, Activations.sigmoid)
 						)
 				.withBiasNode()
-				.withVisualizer()
 				.withSettings(
 						NeatSettings
 						.create()
