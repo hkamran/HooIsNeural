@@ -340,4 +340,8 @@ public class Network {
 		this.visualizer = visualizer;
 		this.visualizer.repaint();
 	}
+	
+	public NetworkSettings getSettings() {
+		return settings;
+	}
 }

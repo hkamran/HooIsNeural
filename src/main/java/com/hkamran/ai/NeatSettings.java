@@ -19,7 +19,7 @@ public class NeatSettings extends NetworkSettings {
 	double maxConnectionWeight = Integer.MAX_VALUE;
 	
 	Activation activation = Activations.sigmoid;
-	long seed = 3000;
+	public long seed = 3000;
 	
 	public static NeatSettings create() {
 		return new NeatSettings();
@@ -27,6 +27,7 @@ public class NeatSettings extends NetworkSettings {
 	
 	public NeatSettings setRandomSeed(long seed) {
 		this.seed = seed;
+		super.setRandomSeed(seed);
 		return this;
 	}
 	

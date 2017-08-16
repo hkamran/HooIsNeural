@@ -282,7 +282,8 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		return this.cloneHelper(neat);
 	}
 	
-	private NeatSettings getSettings() {
+	@Override
+	public NeatSettings getSettings() {
 		return (NeatSettings) settings;
 	}
 	
