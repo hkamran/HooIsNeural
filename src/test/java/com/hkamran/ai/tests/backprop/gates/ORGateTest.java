@@ -1,4 +1,4 @@
-package com.hkamran.ai.tests.gates;
+package com.hkamran.ai.tests.backprop.gates;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -11,9 +11,9 @@ import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 
-public class NOTGateTest {
+public class ORGateTest {
 	
-	private static final double MIN_ERROR = 0.01;
+	private static final double MIN_ERROR = 0.0001;
 	private static final int TRAINING_LIMIT = 250000;
 	static BackPropNetwork network;
 	
@@ -26,11 +26,11 @@ public class NOTGateTest {
 				.setInputLayer(
 						LayerBuilder
 						.create()
-						.addNodes(1, Activations.sigmoid))
+						.addNodes(2, Activations.sigmoid))
 				.addHiddenLayer(
 						LayerBuilder
 						.create()
-						.addNodes(2, Activations.sigmoid))
+						.addNodes(4, Activations.sigmoid))
 				.setOutputLayer(
 						LayerBuilder
 						.create()
@@ -46,13 +46,13 @@ public class NOTGateTest {
 				.build();		
 		
 		network.setTrainingDataSet(
-				new double[][] {{0}, {1}}, 
-				new double[][] {{1}, {0}});
+				new double[][] {{1, 1}, {1, 0}, {0, 1}, {0, 0}}, 
+				new double[][] {{1}, {1}, {1}, {0}});
 		
 		train(network);
 	}
 
-	private static void train(BackPropNetwork network) throws InterruptedException {
+	private static void train(BackPropNetwork network) {
 		int cycle = 0;
 		while (network.getTotalError() > MIN_ERROR && cycle < TRAINING_LIMIT) {
 			network.clear();
@@ -67,11 +67,11 @@ public class NOTGateTest {
 	}
 	
 	@Test
-	public void inputOneExpectZero() {
+	public void inputOneAndOneExpectOne() {
 		network.clear();
-		network.setInput(new double[] {1});
+		network.setInput(new double[] {1,1});
 		network.calculate();
-		double[] expected = new double[] {0};
+		double[] expected = new double[] {1};
 		double[] actual = network.getOutput();
 		for (int i = 0; i < actual.length; i++) {
 			actual[i] = Math.round(actual[i]);
@@ -81,11 +81,11 @@ public class NOTGateTest {
 	}
 
 	@Test
-	public void inputZeroExpectOne() {
+	public void inputZeroAndZeroExpectZero() {
 		network.clear();
-		network.setInput(new double[] {0});
+		network.setInput(new double[] {0, 0});
 		network.calculate();
-		double[] expected = new double[] {1};
+		double[] expected = new double[] {0};
 		double[] actual = network.getOutput();
 		for (int i = 0; i < actual.length; i++) {
 			actual[i] = Math.round(actual[i]);
@@ -94,4 +94,31 @@ public class NOTGateTest {
 		Assert.assertArrayEquals(expected, actual, 0);
 	}	
 	
+	@Test
+	public void inputOneAndZeroExpectOne() {
+		network.clear();
+		network.setInput(new double[] {1, 0});
+		network.calculate();
+		double[] expected = new double[] {1};
+		double[] actual = network.getOutput();
+		for (int i = 0; i < actual.length; i++) {
+			actual[i] = Math.round(actual[i]);
+		}
+
+		Assert.assertArrayEquals(expected, actual, 0);
+	}		
+	
+	@Test
+	public void inputZeroAndOneExpectOne() {
+		network.clear();
+		network.setInput(new double[] {0, 1});
+		network.calculate();
+		double[] expected = new double[] {1};
+		double[] actual = network.getOutput();
+		for (int i = 0; i < actual.length; i++) {
+			actual[i] = Math.round(actual[i]);
+		}
+
+		Assert.assertArrayEquals(expected, actual, 0);
+	}	
 }

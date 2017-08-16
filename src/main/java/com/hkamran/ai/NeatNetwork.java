@@ -8,18 +8,15 @@ import java.util.Random;
 public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	
 	double fitness;
-	int size;
 	
 	List<NeatNetwork> population = new LinkedList<NeatNetwork>();
 	NeatFitness trainer;
 	
-	public void setPopulationSize(int size) {
-		this.size = size;
-	}
+
 	
 	private void createPopulation(NeatNetwork network) {
 		population = new LinkedList<NeatNetwork>();
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < getSettings().getPopulationSize(); i++) {
 			NeatNetwork cNetwork = (NeatNetwork) network.clone();
 			cNetwork.mutate();
 			population.add(cNetwork);
@@ -146,24 +143,21 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		return true;
 	}
 
-	public NeatNetwork train(int generation) {
+	public NeatNetwork train() {
 		if (trainer == null) return null;
-		if (size < 1) return null;
+		if (getSettings().getPopulationSize() < 1) return null;
 		
-		if (population.size() < size) {
+		if (population.size() < getSettings().getPopulationSize()) {
 			createPopulation(this);
 		}
 		
-		for (int i = 0; i < generation; i++) {
-			for (NeatNetwork person : population) {
-				double fitness = trainer.calculate(person);
-				person.fitness = fitness;
-			}
+		for (NeatNetwork person : population) {
+			double fitness = trainer.calculate(person);
+			person.fitness = fitness;
 		}
 		
 		NeatNetwork result = evolve();
 		result.trainer = this.trainer;
-		result.size = this.size;
 		result.visualizer = this.visualizer;
 		result.label = this.label;
 		result.settings = getSettings();
@@ -189,7 +183,9 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	public void mutate() {
 
 		int mutateCount = 0;
-		while (mutateCount < getSettings().maxMutations) {
+		int maxMutation = (int) getRandom(1, getSettings().maxMutations);
+		
+		while (mutateCount < maxMutation) {
 			
 			Random random = getSettings().getRandomizer();
 			
@@ -263,15 +259,18 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	public boolean mutateWeight() {
 		List<Connection> connections = getConnections();
 		if (connections.size() == 0) return false;
-		int index = (int) Math.round(getRandom(0, connections.size() - 1));
-		Connection connection = connections.get(index);
-		double adjustment = getRandom(-1, 1) * getSettings().adjustmentChange;
-		connection.weight += adjustment;
-		if (connection.weight > getSettings().maxConnectionWeight) {
-			connection.weight = getSettings().maxConnectionWeight;
-		}
-		if (connection.weight < getSettings().minConnectionWeight) {
-			connection.weight = getSettings().minConnectionWeight;
+		//int index = (int) Math.round(getRandom(0, connections.size() - 1));
+		for (int i = 0; i < connections.size(); i++) {
+			Connection connection = connections.get(i);
+			double adjustment = getRandom(-1, 1) * getSettings().adjustmentChange;
+			connection.weight += adjustment;
+			
+			if (connection.weight > getSettings().maxConnectionWeight) {
+				connection.weight = getSettings().maxConnectionWeight;
+			}
+			if (connection.weight < getSettings().minConnectionWeight) {
+				connection.weight = getSettings().minConnectionWeight;
+			}
 		}
 		return true;
 	}
@@ -312,7 +311,6 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	public void become(Network network) {
 		if (!(network instanceof NeatNetwork)) return;
 		NeatNetwork neat = (NeatNetwork) network;
-		this.size = neat.size;
 		this.fitness = neat.fitness;
 		this.trainer = neat.trainer;
 		super.become(network);

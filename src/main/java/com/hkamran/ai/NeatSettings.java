@@ -12,7 +12,7 @@ public class NeatSettings extends NetworkSettings {
 	int maxMutations = 1;
 	int hiddenNodeCap = 2;
 	int hiddenLayerCap = 1;
-	
+	int popSize = 10;
 	
 	double adjustmentChange = 0.08;
 	double minConnectionWeight = Integer.MIN_VALUE;
@@ -60,6 +60,15 @@ public class NeatSettings extends NetworkSettings {
 	public NeatSettings setMaxWeight(double num) {
 		this.maxConnectionWeight = num;
 		return this;
+	}
+	
+	public NeatSettings setPopulationSize(int num) {
+		this.popSize = num;
+		return this;
+	}
+
+	public int getPopulationSize() {
+		return popSize;
 	}
 	
 

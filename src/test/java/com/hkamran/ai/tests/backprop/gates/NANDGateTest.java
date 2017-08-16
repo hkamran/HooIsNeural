@@ -1,4 +1,4 @@
-package com.hkamran.ai.tests.gates;
+package com.hkamran.ai.tests.backprop.gates;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;

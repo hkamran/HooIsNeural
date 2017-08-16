@@ -1,4 +1,4 @@
-package com.hkamran.ai.tests.neat;
+package com.hkamran.ai.tests.neat.gates;
 
 import java.util.Scanner;
 
@@ -12,7 +12,7 @@ import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 import com.hkamran.ai.Visualizer;
 
-public class PlayGround {
+public class XORGateTest {
 
 	static NeatNetwork network;
 	
