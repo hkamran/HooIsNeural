@@ -17,7 +17,7 @@ A Java implementation of NEAT, Feed-Forward, and back-propagating neural network
 #### Creating:
 Use the network builder class to generate a back-propogating network.
 ```java
-NetworkBuilder
+(BackPropNetwork) NetworkBuilder
 	.create(NetworkType.BACKPROP)
 	.setLabel("XOR GATE")
 	.setInputLayer(
@@ -44,7 +44,7 @@ NetworkBuilder
 	.build();	
 ```
 #### Training:
-To train the network for 1 cycle execute the following code.
+To train the network execute the following code.
 ```java
 private static final double MIN_ERROR = 0.0001;
 private static final int TRAINING_LIMIT = 250000;
@@ -72,7 +72,7 @@ network.getOutput();
 #### Creating:
 Using the network builder class we can also create a NEAT network.
 ```java
-NetworkBuilder
+(NeatNetwork) NetworkBuilder
 	.create(NetworkType.EVOLUTION)
 	.setLabel("XOR GATE")
 	.setInputLayer(
