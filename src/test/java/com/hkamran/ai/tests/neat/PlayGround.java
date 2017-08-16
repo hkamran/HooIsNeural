@@ -39,11 +39,11 @@ public class PlayGround {
 				.withSettings(
 						NeatSettings
 						.create()
-						.setRandomSeed(3000)
-						.setHiddenNodeCap(8)
+						.setRandomSeed(4000)
+						.setHiddenNodeCap(4)
 						.setHiddenLayerCap(1)
-						.setMaxMutations(1)
-						.setWeightAdjustment(1))
+						.setMaxMutations(3)
+						.setWeightAdjustment(0.5))
 				.build();	
 		
 		train(network);
@@ -78,7 +78,7 @@ public class PlayGround {
 		int i = 0;
 		
 		network.setFitness(new XORFitness());
-		network.setPopulationSize(100);
+		network.setPopulationSize(300);
 		Visualizer visualizer = new Visualizer(network);
 		network.setVisualizer(visualizer);
 		
@@ -86,7 +86,7 @@ public class PlayGround {
 			network = network.train(1);
 			visualizer.network = network;
 			System.out.println("FITNESS: " + network.getFitness());
-			Thread.sleep(100);
+			Thread.sleep(10);
 			if (network.getFitness() >= 3.5) {
 				break;
 			}

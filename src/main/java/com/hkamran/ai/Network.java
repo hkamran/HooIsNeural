@@ -10,20 +10,17 @@ import java.util.Set;
 
 public class Network {
 
+	int hiddenIndex = 0;
 	public Node bias  = new Node(null, Activations.sigmoid);
 	
 	List<Layer> hidden = new LinkedList<Layer>();
 	Layer input;
 	Layer output;
 	Visualizer visualizer;
-	public Set<Connection> connections = new HashSet<Connection>();
+	Set<Connection> connections = new HashSet<Connection>();
 	
-	public boolean hasBias;
 	String label;
-	long seed = System.currentTimeMillis();
-	Random random = new Random(seed);
-	NetworkSettings settings;
-	int hiddenIndex = 0;
+	NetworkSettings settings = new NetworkSettings();
 	
 	public void createAllConnections() {
 		List<Connection> connections = generateAllConnections();
@@ -52,7 +49,7 @@ public class Network {
 			i++;
 		} while ( i < layers.size());
 		
-		if (!hasBias) return connections;
+		if (!settings.hasBias()) return connections;
 		
 		//bias setup
 		for (i = 1; i < layers.size() - 1; i++) {
@@ -68,7 +65,7 @@ public class Network {
 	}
 
 	protected double getRandom(int min, int max) {
-		double result = (random.nextDouble() * (max - min)) + min;
+		double result = (settings.getRandomizer().nextDouble() * (max - min)) + min;
 		return result;
 	}
 	
@@ -143,7 +140,7 @@ public class Network {
 	}
 	
 	public Node getNode(int layerIndex, int nodeIndex) {
-		if (layerIndex == -1 && hasBias) return bias; 
+		if (layerIndex == -1 && settings.hasBias()) return bias; 
 		Layer layer = getLayer(layerIndex);
 		if (layer == null) return null;
 		return layer.getNode(nodeIndex);
@@ -232,7 +229,7 @@ public class Network {
 	}
 	
 	public void addBiasNode() {
-		this.hasBias = true;
+		settings.hasBias = true;
 		this.bias.setLabel("BIAS");
 		this.bias.setInput(1);
 	}
@@ -304,7 +301,6 @@ public class Network {
 		cNetwork.setOutputLayer(cOutput);
 		cNetwork.setHiddenLayers(cHidden);
 
-		cNetwork.hasBias = this.hasBias;
 		cNetwork.label = this.label;
 		cNetwork.setSettings(this.settings);
 		
@@ -321,11 +317,6 @@ public class Network {
 		return content.toString();
 	}
 	
-	public void setRandomSeed(long seed) {
-		this.seed = seed;
-		random = new Random(seed);
-	}
-	
 	public void become(Network network) {
 		this.hidden = network.hidden;
 		this.input = network.input;
@@ -333,10 +324,8 @@ public class Network {
 		this.visualizer = network.visualizer;
 		this.connections = network.connections;
 		
-		this.hasBias = network.hasBias;
+
 		this.label = network.label;
-		this.seed = network.seed;
-		this.random = network.random;
 		this.settings = network.settings;
 		this.hiddenIndex = network.hiddenIndex;
 		

@@ -5,21 +5,10 @@ import java.util.List;
 
 public class BackPropNetwork extends Network {
 
-	double learningRate;
 	double[][] inputDataSet;
 	double[][] targetDataSet;
-	double totalError;
-	
-	public BackPropNetwork() {
-		this.totalError = Double.MAX_VALUE;
-		this.learningRate = 0.2;
-	}
-	
-	public void setLearningRate(double learningRate) {
-		this.learningRate = learningRate;
-	}
+	double totalError = Double.MAX_VALUE;
 
-	
 	public void train(int amount) {
 		if (inputDataSet.length != targetDataSet.length)
 			throw new RuntimeException("input data size does not match target data size!");
@@ -107,6 +96,11 @@ public class BackPropNetwork extends Network {
 		
 		this.inputDataSet = inputs;
 		this.targetDataSet = targets;
+	}
+	
+
+	public BackPropSettings getSettings() {
+		return (BackPropSettings) settings;
 	}
 
 

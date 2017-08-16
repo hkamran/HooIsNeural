@@ -12,7 +12,11 @@ public class NeatSettings extends NetworkSettings {
 	int maxMutations = 1;
 	int hiddenNodeCap = 2;
 	int hiddenLayerCap = 1;
+	
+	
 	double adjustmentChange = 0.08;
+	double minConnectionWeight = Integer.MIN_VALUE;
+	double maxConnectionWeight = Integer.MAX_VALUE;
 	
 	Activation activation = Activations.sigmoid;
 	long seed = 3000;
@@ -46,12 +50,18 @@ public class NeatSettings extends NetworkSettings {
 		return this;
 	}
 	
-	@Override
-	protected void apply(Network network) {
-		if (!(network instanceof NeatNetwork)) return;
 
-		NeatNetwork nNetwork = (NeatNetwork) network;
-		nNetwork.setRandomSeed(seed);
+	public NeatSettings setMinWeight(double num) {
+		this.minConnectionWeight = num;
+		return this;
 	}
+	
+
+	public NeatSettings setMaxWeight(double num) {
+		this.maxConnectionWeight = num;
+		return this;
+	}
+	
+
 	
 }

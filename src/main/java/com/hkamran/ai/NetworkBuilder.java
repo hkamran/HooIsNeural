@@ -118,11 +118,13 @@ public class NetworkBuilder {
 		if (input == null || output == null) 
 			throw new RuntimeException("Missing Input/Output layer!");
 
+		network.setSettings(settings);
 		
 		network.setInputLayer(input);
 		for (Layer layer : hidden) {
 			network.addHiddenLayer(layer);
 		}
+		
 		network.setOutputLayer(output);
 		
 		if (hasBias) {
@@ -142,7 +144,6 @@ public class NetworkBuilder {
 			toLayer.addConnection(connection);
 		}
 		
-		this.settings.apply(network);
 		
 		if (allConnection) {
 			network.createAllConnections();
@@ -152,9 +153,6 @@ public class NetworkBuilder {
 			Visualizer visual = new Visualizer(network);
 			network.setVisualizer(visual);
 		}
-		
-		network.setSettings(settings);
-		
 		return network;
 	}
 

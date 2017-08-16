@@ -1,12 +1,25 @@
 package com.hkamran.ai;
 
+import java.util.Random;
+
 public class NetworkSettings {
 
+	public boolean hasBias = true;
+	long seed = System.currentTimeMillis();
+	Random random = new Random(seed);
 
-
-	protected void apply(Network network) {
-		// TODO Auto-generated method stub
-		
+	public Random getRandomizer() {
+		return random;
+	}
+	
+	public boolean hasBias() {
+		return hasBias;
+	}
+	
+	public NetworkSettings setRandomSeed(long seed) {
+		this.seed = seed;
+		this.random = new Random(seed);
+		return this;
 	}
 
 
