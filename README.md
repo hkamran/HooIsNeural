@@ -10,7 +10,7 @@ A Java implementation of NEAT, Feed-Forward, and back-propagating neural network
         <img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xors_1.gif"></img>		
 </div>
 
-## Documentation
+## Examples
 
 ### Back-Propogating Network
 
