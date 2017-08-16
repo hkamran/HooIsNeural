@@ -7,7 +7,7 @@ Neural Networks implemented in Java
 		<img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_3.gif"></img>
 </div>
 <div align="center">
-        <img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_1.gif"></img>		
+        <img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xors_1.gif"></img>		
 </div>
 
 ## About
