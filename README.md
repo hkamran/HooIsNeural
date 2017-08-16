@@ -46,8 +46,15 @@ NetworkBuilder
 #### Training:
 To train the network for 1 cycle execute the following code.
 ```java
-network.clear();
-network.train();
+private static final double MIN_ERROR = 0.0001;
+private static final int TRAINING_LIMIT = 250000;
+
+int cycle = 0;
+while (network.getTotalError() > MIN_ERROR && cycle < TRAINING_LIMIT) {
+	network.clear();
+	network.train();
+	cycle++;
+}
 ```
 
 #### Executing: 

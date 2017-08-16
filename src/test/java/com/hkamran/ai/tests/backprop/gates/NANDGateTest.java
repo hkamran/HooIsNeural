@@ -54,7 +54,7 @@ public class NANDGateTest {
 		int cycle = 0;
 		while (network.getTotalError() > MIN_ERROR && cycle < TRAINING_LIMIT) {
 			network.clear();
-			network.train(1);
+			network.train();
 			if (cycle % 10000 == 0) System.out.println(cycle);
 			cycle++;
 		};

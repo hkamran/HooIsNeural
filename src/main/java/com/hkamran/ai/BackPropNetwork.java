@@ -9,20 +9,19 @@ public class BackPropNetwork extends Network {
 	double[][] targetDataSet;
 	double totalError = Double.MAX_VALUE;
 
-	public void train(int amount) {
+	public void train() {
 		if (inputDataSet.length != targetDataSet.length)
 			throw new RuntimeException("input data size does not match target data size!");
 		
 		this.totalError = 0;
-		for (int i = 0; i < amount; i++) {
-			for (int j = 0; j < targetDataSet.length; j++) {
-				double[] input = inputDataSet[j];
-				double[] target = targetDataSet[j];
-				
-				this.forwardPropogate(input);
-				this.backPropogate(input, target);
-			}
+		for (int j = 0; j < targetDataSet.length; j++) {
+			double[] input = inputDataSet[j];
+			double[] target = targetDataSet[j];
+			
+			this.forwardPropogate(input);
+			this.backPropogate(input, target);
 		}
+		
 	}
 	
 	private void backPropogate(double[] input, double[] target) {
