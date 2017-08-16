@@ -5,6 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Implementation of a NEAT network.
+ * 
+ * @author hkamran
+ *
+ */
 public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	
 	double fitness;

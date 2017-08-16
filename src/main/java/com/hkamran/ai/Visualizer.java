@@ -17,6 +17,11 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+/**
+ * The purpose of this class is to graphically present the neural network.
+ * @author hkamran
+ *
+ */
 public class Visualizer extends JComponent {
 
 	class Point {

@@ -1,7 +1,10 @@
 package com.hkamran.ai;
 
-import com.hkamran.ai.Activations.Activation;
-
+/**
+ * This is a helper class to build layer instances.
+ * @author hkamran
+ *
+ */
 public class LayerBuilder {
 
 	Layer layer;

@@ -3,6 +3,11 @@ package com.hkamran.ai;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This is a helper class to build Networks of different types.
+ * @author hkamran
+ *
+ */
 public class NetworkBuilder {
 
 	public static enum NetworkType {

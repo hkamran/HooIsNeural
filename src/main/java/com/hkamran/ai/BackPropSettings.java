@@ -1,5 +1,10 @@
 package com.hkamran.ai;
 
+/**
+ * A class that holds the settings used for Back-Propagating settings. 
+ * @author hkamran
+ *
+ */
 public class BackPropSettings extends NetworkSettings {
 
 	double learningRate = 0.2;

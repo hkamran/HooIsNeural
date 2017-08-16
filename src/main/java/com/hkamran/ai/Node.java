@@ -1,7 +1,10 @@
 package com.hkamran.ai;
 
-import com.hkamran.ai.Activations.Activation;
-
+/**
+ * This class represents a single node in a neural network.
+ * @author hkamran
+ *
+ */
 public class Node {
 
 	private static int IdCounter = 0;

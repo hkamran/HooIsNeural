@@ -3,6 +3,11 @@ package com.hkamran.ai;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A class that implements the Back-Propagating Network.
+ * @author hkamran
+ *
+ */
 public class BackPropNetwork extends Network {
 
 	double[][] inputDataSet;

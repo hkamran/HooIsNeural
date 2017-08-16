@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hkamran.ai.Activations.Activation;
-
+/**
+ * This class represents a layer in a neural network.
+ * @author hkamran
+ *
+ */
 public class Layer {
 
 	List<Node> nodes = new LinkedList<Node>();

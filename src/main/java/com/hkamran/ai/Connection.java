@@ -1,11 +1,15 @@
 package com.hkamran.ai;
 
+/**
+ * This class represents the connection between nodes in a neural network.
+ * @author hkamran
+ *
+ */
 public class Connection {
 
 	public double weight;
 	Node from;
 	Node to;
-
 	
 	public Connection(Node from, Node to) {
 		this.from = from;

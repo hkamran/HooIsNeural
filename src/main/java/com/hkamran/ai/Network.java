@@ -5,9 +5,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
+/**
+ * This class represent a basic feed-forward network.
+ * @author hkamran
+ *
+ */
 public class Network {
 
 	int hiddenIndex = 0;

@@ -2,6 +2,11 @@ package com.hkamran.ai;
 
 import java.util.Random;
 
+/**
+ * This class represents the basic settings that can be applied.
+ * @author hkamran
+ *
+ */
 public class NetworkSettings {
 
 	public boolean hasBias = true;

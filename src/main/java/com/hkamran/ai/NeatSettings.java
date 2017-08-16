@@ -1,7 +1,10 @@
 package com.hkamran.ai;
 
-import com.hkamran.ai.Activations.Activation;
-
+/**
+ * A class that holds the setings of a NEAT network.
+ * @author hkamran
+ *
+ */
 public class NeatSettings extends NetworkSettings {
 	
 	public double addConnectionChange = 0.3;

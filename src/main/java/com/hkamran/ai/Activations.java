@@ -1,12 +1,11 @@
 package com.hkamran.ai;
 
+/**
+ * A class that would hold a collection of activation types.
+ * @author hkamran
+ */
 public class Activations {
 
-	public static interface Activation {
-		public double calculate(double x);
-		public double derivative(double x);
-	}
-	
 	public static Activation sigmoid = new Activation() {
 		public double calculate(double x) {
 			return 1 / (1 + Math.pow(Math.E, -x));
