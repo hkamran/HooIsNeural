@@ -6,8 +6,15 @@ Neural Networks implemented in Java
         <img width="45%" src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/preview.png"></img>
 </div>
 
+<div align="center">
+        <img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_1.gif"></img>
+		<img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_2.gif"></img>
+		<img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_3.gif"></img>
+				
+</div>
+
 ## About
-Wanted to try out neural networks, so I made my own implementation of back propogation and soon neural evolution.
+Wanted to try out neural networks, so I made my own implementation of back propogating and neat networks.
 
 ## Requirements
 

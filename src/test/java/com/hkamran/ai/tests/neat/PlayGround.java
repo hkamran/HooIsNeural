@@ -41,7 +41,7 @@ public class PlayGround {
 						.create()
 						.setRandomSeed(3000)
 						.setHiddenNodeCap(4)
-						.setHiddenLayerCap(2)
+						.setHiddenLayerCap(4)
 						.setMaxMutations(5)
 						.setWeightAdjustment(1)
 						.setMaxWeight(10.0)
@@ -83,7 +83,8 @@ public class PlayGround {
 		network.setFitness(new XORFitness());
 		Visualizer visualizer = new Visualizer(network);
 		network.setVisualizer(visualizer);
-		
+
+		Thread.sleep(6500);
 		while (true) {
 			network = network.train();
 			visualizer.network = network;
@@ -91,7 +92,7 @@ public class PlayGround {
 			if (network.getFitness() >= 3.5) {
 				break;
 			}
-			
+			Thread.sleep(50);
 		}
 		System.out.println("READY! ");
 		testViaUserInput(network);
