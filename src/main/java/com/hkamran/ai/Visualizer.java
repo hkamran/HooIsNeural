@@ -30,7 +30,7 @@ public class Visualizer extends JComponent {
 	}
 	
 	private static final long serialVersionUID = 1L;
-	Network network;
+	public Network network;
 	JFrame frame;
 	int largestLayer = 0;
 	

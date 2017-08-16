@@ -9,11 +9,11 @@ public class NeatSettings extends NetworkSettings {
 	public double adjustWeightChance = 0.9;
 	public double addLayerChance = 0.9;
 	
-	int maxMutations = 2;
-	double weightMutationStep = 1;
+	int maxMutations = 1;
 	int hiddenNodeCap = 2;
 	int hiddenLayerCap = 1;
-	double adjustmentChange = 0.2;
+	double adjustmentChange = 0.08;
+	
 	Activation activation = Activations.sigmoid;
 	long seed = 3000;
 	
@@ -36,9 +36,20 @@ public class NeatSettings extends NetworkSettings {
 		return this;
 	}
 	
+	public NeatSettings setMaxMutations(int num) {
+		this.maxMutations = num;
+		return this;
+	}
+	
+	public NeatSettings setWeightAdjustment(double num) {
+		this.adjustmentChange = num;
+		return this;
+	}
+	
 	@Override
 	protected void apply(Network network) {
 		if (!(network instanceof NeatNetwork)) return;
+
 		NeatNetwork nNetwork = (NeatNetwork) network;
 		nNetwork.setRandomSeed(seed);
 	}

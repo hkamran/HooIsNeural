@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 	
 	double fitness;
@@ -95,23 +97,29 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		List<Connection> fatherConnections = new LinkedList<Connection>(father.getConnections());
 		List<Connection> motherConnections = new LinkedList<Connection>(mother.getConnections());
 		
-		int expected = (fatherConnections.size() + motherConnections.size()) / 2;
+		int expected = Math.max(fatherConnections.size(), motherConnections.size());
 		int count = 0;
-		
-		while (count < expected && fatherConnections.size() + motherConnections.size() >= expected) {
+
+		while (count < expected) {
 			int chance = (int) Math.round(getRandom(0, 1));
 			if (chance > 0.5 && fatherConnections.size() > 0) {
 				int index = (int) Math.round(getRandom(0, fatherConnections.size() - 1));
 				Connection connection = fatherConnections.get(index);
 				boolean result = copulateInsertConnection(father, connection, child);
 				fatherConnections.remove(index);
+				child.toString();
 				if (result) count++;
 			} else if (chance <= 0.5 && motherConnections.size() > 0) {
 				int index = (int) Math.round(getRandom(0, motherConnections.size() - 1));
 				Connection connection = motherConnections.get(index);
 				boolean result = copulateInsertConnection(mother, connection, child);
+				child.toString();
 				motherConnections.remove(index);
 				if (result) count++;
+			}
+			
+			if (child.getConnections().size() != count) {
+				throw new RuntimeException("Mismatch merge");
 			}
 		}
 	}
@@ -137,14 +145,17 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		Node b = child.getNode(toLayerIndex, toNodeIndex);
 		if (a == null || b == null) return false;
 		
-		Connection cChild = child.addConnection(a, b, connection.weight);
+		Connection cChild = new Connection(a, b, connection.weight);
+		if (child.hasConnection(cChild)) return false;
+		
+		child.addConnection(cChild);
 
-		return cChild != null;
+		return true;
 	}
 
-	public void train(int generation) {
-		if (trainer == null) return;
-		if (size < 1) return;
+	public NeatNetwork train(int generation) {
+		if (trainer == null) return null;
+		if (size < 1) return null;
 		
 		if (population.size() < size) {
 			createPopulation(this);
@@ -165,14 +176,17 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		result.label = this.label;
 		result.seed = this.seed;
 		result.random = this.random;
-		result.settings = this.settings;
+		result.settings = getSettings();
 		result.fitness = trainer.calculate(result);
+		this.population = new LinkedList<NeatNetwork>();
 		
 		this.become(result);
+		return result;
 	}
 	
 	public NeatNetwork evolve() {
 		Collections.sort(population);
+		
 		NeatNetwork mother = population.get(0);
 		NeatNetwork father = population.get(1);
 		
@@ -215,10 +229,6 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 				mutateCount++;
 				hasMutate = true;
 			} 
-			
-			if (!hasMutate){
-				throw new RuntimeException("Cant mutate!");
-			}
 		}
 		if (visualizer != null) visualizer.repaint();
 	}
@@ -232,7 +242,7 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 		int index = (int) Math.round(getRandom(0, layers.size() - 1));
 		Layer layer = layers.get(index);
 
-		if (layer.size() == getSettings().hiddenNodeCap) return false;
+		if (layer.size() >= getSettings().hiddenNodeCap) return false;
 		layer.addNode(Activations.sigmoid);
 		
 
@@ -287,7 +297,13 @@ public class NeatNetwork extends Network implements Comparable<NeatNetwork> {
 
 	@Override
 	public int compareTo(NeatNetwork neat) {
-		return (int) Math.round(neat.fitness - this.fitness);
+		if (this.fitness > neat.fitness) {
+			return -1;
+		} else if (this.fitness < neat.fitness) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 	
 	private int getLayerIndex(NeatNetwork network, Layer layer) {

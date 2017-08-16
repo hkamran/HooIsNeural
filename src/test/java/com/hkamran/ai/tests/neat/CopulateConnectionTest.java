@@ -7,7 +7,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.hkamran.ai.Activations;
-import com.hkamran.ai.BackPropSettings;
 import com.hkamran.ai.Connection;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.NeatNetwork;
@@ -15,7 +14,6 @@ import com.hkamran.ai.NeatSettings;
 import com.hkamran.ai.NetworkBuilder;
 import com.hkamran.ai.NetworkBuilder.NetworkType;
 import com.hkamran.ai.Node;
-import com.hkamran.ai.Visualizer;
 
 public class CopulateConnectionTest {
 	static NeatNetwork network;
@@ -30,11 +28,10 @@ public class CopulateConnectionTest {
 		network = 
 				(NeatNetwork) NetworkBuilder
 				.create(NetworkType.EVOLUTION)
-				.setLabel("XOR GATE")
 				.setInputLayer(
 						LayerBuilder
 						.create()
-						.addNodes(2, Activations.sigmoid))
+						.addNodes(1, Activations.sigmoid))
 				.addHiddenLayer(
 						LayerBuilder
 						.create()
@@ -51,6 +48,7 @@ public class CopulateConnectionTest {
 						.setRandomSeed(3000))
 				.build();		
 	}
+	
 	
 	
 	@Test
@@ -73,11 +71,6 @@ public class CopulateConnectionTest {
 		
 		List<Connection> connections = c.getConnections();
 		Assert.assertTrue(connections.size() == 1);	
-		
-		Connection connection = connections.get(0);
-		
-		Assert.assertTrue(connection.getFrom() == c.getNode(0, 1));
-		Assert.assertTrue(connection.getTo() == c.getNode(1, 1));
 	}
 	
 	@Test
@@ -92,6 +85,7 @@ public class CopulateConnectionTest {
 		second = b.getNode(1, 0);
 		b.addConnection(first, second, -1.0);
 		
+		
 		NeatNetwork c = (NeatNetwork) network.clone();		
 		c.copulateConnections(a, b, c);
 		
@@ -103,6 +97,27 @@ public class CopulateConnectionTest {
 		Connection connection = connections.get(0);
 		
 		Assert.assertTrue(connection.getFrom() == c.getNode(-1, 0));
+	
+	}	
+	
+	@Test
+	public void testAll0Connection() {
+		a = (NeatNetwork) network.clone();
+		a.createAllConnections();
+		a.withVisualizer();
+		
+		b = (NeatNetwork) network.clone();
+		b.createAllConnections();
+		b.withVisualizer();
+		
+		NeatNetwork c = (NeatNetwork) network.clone();	
+		c.withVisualizer();	
+		c.copulateConnections(a, b, c);
+		
+		//Assert
+		
+		List<Connection> connections = c.getConnections();
+		Assert.assertTrue(connections.size() == a.getConnections().size());
 	
 	}
 }

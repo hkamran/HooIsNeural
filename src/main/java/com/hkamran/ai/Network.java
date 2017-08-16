@@ -25,7 +25,7 @@ public class Network {
 	NetworkSettings settings;
 	int hiddenIndex = 0;
 	
-	protected void createAllConnections() {
+	public void createAllConnections() {
 		List<Connection> connections = generateAllConnections();
 		for (Connection connection : connections) {
 			addConnection(connection);
@@ -275,8 +275,13 @@ public class Network {
 					Node cTo = mapping.get(to);
 					double cWeight = weight;
 					
-					if (cFrom == null || cTo == null) {
+					
+					if (cTo == null) {
 						throw new RuntimeException("Error copy failure");
+					}
+					
+					if (cFrom == null) {
+						cFrom = cNetwork.bias;
 					}
 					
 					Connection cConnection = new Connection(cFrom, cTo);
@@ -339,5 +344,11 @@ public class Network {
 			visualizer.network = this;
 			visualizer.repaint();
 		}
+	}
+	
+	public void withVisualizer() {
+		Visualizer visualizer = new Visualizer(this);
+		this.visualizer = visualizer;
+		this.visualizer.repaint();
 	}
 }
