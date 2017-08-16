@@ -3,14 +3,11 @@ Neural Networks implemented in Java
 
 ## Screenshots
 <div align="center">
-        <img width="45%" src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/preview.png"></img>
-</div>
-
-<div align="center">
-        <img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_1.gif"></img>
 		<img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_2.gif"></img>
 		<img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_3.gif"></img>
-				
+</div>
+<div align="center">
+        <img src="https://raw.githubusercontent.com/hkamran/HooIsNeural/master/images/neat_xor_1.gif"></img>		
 </div>
 
 ## About
