@@ -1,4 +1,4 @@
-package com.hkamran.ai.tests.backprop.gates;
+package com.hkamran.ai.tests.playground.backprop;
 
 import java.util.Scanner;
 

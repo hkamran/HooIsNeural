@@ -1,4 +1,4 @@
-package com.hkamran.ai.tests.neat;
+package com.hkamran.ai.tests.playground.neat;
 
 import java.util.Scanner;
 
@@ -26,10 +26,6 @@ public class PlayGround {
 						LayerBuilder
 						.create()
 						.addNodes(2, Activations.sigmoid))
-				.addHiddenLayer(						
-						LayerBuilder
-						.create()
-						.addNodes(0, Activations.sigmoid))
 				.setOutputLayer(
 						LayerBuilder
 						.create()
@@ -103,10 +99,10 @@ public class PlayGround {
 		Scanner in = new Scanner(System.in);
 		
 		while (true) {
-			System.out.println("Enter: ");
 			int size = network.getInputLayer().size();
 			double[] input = new double[size];
 			for (int i = 0; i < size; i++) {
+				System.out.println("Enter Input " + (i + 1) + ": ");
 				input[i] = in.nextDouble();
 			}
 

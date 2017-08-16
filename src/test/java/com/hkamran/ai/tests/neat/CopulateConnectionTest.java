@@ -24,7 +24,7 @@ public class CopulateConnectionTest {
 	Node second;
 	
 	@BeforeClass
-	public static void xorTest() throws InterruptedException {
+	public static void beforeClassSetup() throws InterruptedException {
 		network = 
 				(NeatNetwork) NetworkBuilder
 				.create(NetworkType.EVOLUTION)
@@ -52,7 +52,7 @@ public class CopulateConnectionTest {
 	
 	
 	@Test
-	public void testConnectionBetweenLayers() throws InterruptedException {
+	public void testTranferOfConnectionBetweenLayers() throws InterruptedException {
 		
 		a = (NeatNetwork) network.clone();
 		first = a.getNode(0, 0);
@@ -74,7 +74,7 @@ public class CopulateConnectionTest {
 	}
 	
 	@Test
-	public void testConnectionBetweenBias() {
+	public void testTranferOfConnectionBetweenBias() {
 		a = (NeatNetwork) network.clone();
 		first = a.getNode(-1, 0);
 		second = a.getNode(1, 0);
@@ -101,7 +101,7 @@ public class CopulateConnectionTest {
 	}	
 	
 	@Test
-	public void testAll0Connection() {
+	public void testTransferOfAllConnection() {
 		a = (NeatNetwork) network.clone();
 		a.createAllConnections();
 		a.withVisualizer();

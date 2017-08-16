@@ -59,33 +59,6 @@ public class XORGateTest {
 		train(network);		
 	}
 	
-	public static void main(String[] args) {
-		beforeClassSetup();
-		testViaUserInput(network);
-	}
-	
-	private static void testViaUserInput(Network network) {
-		@SuppressWarnings("resource")
-		Scanner in = new Scanner(System.in);
-		
-		while (true) {
-			System.out.println("Enter: ");
-			int size = network.getInputLayer().size();
-			double[] input = new double[size];
-			for (int i = 0; i < size; i++) {
-				input[i] = in.nextDouble();
-			}
-
-			network.clear();
-			network.setInput(input);
-			network.calculate();
-		
-			for (int i = 0; i < network.getOutput().length; i++) {
-				System.out.println("Output: " + Math.round(network.getOutput()[i]) + " [" + network.getOutput()[i] + "]");
-			}
-		}
-	}
-	
 	private static void train(NeatNetwork network)  {
 		network.setFitness(new XORFitness());
 		System.out.println("Evolving....");

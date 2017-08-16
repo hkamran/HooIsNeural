@@ -72,6 +72,11 @@ public class NeatSettings extends NetworkSettings {
 		return popSize;
 	}
 	
+	public NeatSettings setActivation(Activation activation) {
+		this.activation = activation;
+		return this;
+	}
+	
 
 	
 }

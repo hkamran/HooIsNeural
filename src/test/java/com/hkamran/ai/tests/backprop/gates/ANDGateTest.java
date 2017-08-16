@@ -18,7 +18,7 @@ public class ANDGateTest {
 	static BackPropNetwork network;
 	
 	@BeforeClass
-	public static void xorTest() throws InterruptedException {
+	public static void beforeClassSetup() throws InterruptedException {
 		network = 
 				(BackPropNetwork) NetworkBuilder
 				.create(NetworkType.BACKPROP)

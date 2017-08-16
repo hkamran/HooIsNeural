@@ -1,7 +1,5 @@
 package com.hkamran.ai.tests.backprop.gates;
 
-import java.util.Scanner;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -9,8 +7,6 @@ import org.junit.Test;
 import com.hkamran.ai.Activations;
 import com.hkamran.ai.BackPropNetwork;
 import com.hkamran.ai.BackPropSettings;
-import com.hkamran.ai.Connection;
-import com.hkamran.ai.Layer;
 import com.hkamran.ai.LayerBuilder;
 import com.hkamran.ai.Network;
 import com.hkamran.ai.NetworkBuilder;
@@ -23,7 +19,7 @@ public class XORGateTest {
 	static BackPropNetwork network;
 	
 	@BeforeClass
-	public static void xorTest() throws InterruptedException {
+	public static void beforeClassSetup() throws InterruptedException {
 		network = 
 				(BackPropNetwork) NetworkBuilder
 				.create(NetworkType.BACKPROP)
@@ -144,43 +140,6 @@ public class XORGateTest {
 		}
 		
 		Assert.assertArrayEquals(expected, actual, 0);
-	}
-	public void printWeights(Network network) {
-		for (Layer layer : network.getLayers()) {
-			for (Connection connection : layer.getConnections()) {
-				System.out.println(connection.weight);
-			}
-		}
-		System.out.println("");
-		
-	}
-	
-	public static void main(String[] args) throws InterruptedException {
-		xorTest();
-		train(network);
-		testViaUserInput(network);
-	}
-	
-	private static void testViaUserInput(Network network) {
-		@SuppressWarnings("resource")
-		Scanner in = new Scanner(System.in);
-		
-		while (true) {
-			System.out.println("Enter: ");
-			int size = network.getInputLayer().size();
-			double[] input = new double[size];
-			for (int i = 0; i < size; i++) {
-				input[i] = in.nextDouble();
-			}
-
-			network.clear();
-			network.setInput(input);
-			network.calculate();
-		
-			for (int i = 0; i < network.getOutput().length; i++) {
-				System.out.println("Output: " + Math.round(network.getOutput()[i]) + " [" + network.getOutput()[i] + "]");
-			}
-		}
 	}
 	
 }

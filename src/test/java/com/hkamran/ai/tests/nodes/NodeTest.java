@@ -14,7 +14,7 @@ import org.junit.Assert;
 public class NodeTest {
 
 	@Test
-	public void getNumberFromMapTest() {
+	public void testHashCodeFromMapExists() {
 		Node a = new Node(null, Activations.sigmoid);
 		Node b = new Node(null, Activations.sigmoid);
 		Node c = new Node(null, Activations.sigmoid);
@@ -28,7 +28,7 @@ public class NodeTest {
 	}
 	
 	@Test
-	public void getNodeFromMapTest() {
+	public void testHashCodeFromMapNotExists() {
 		Node a = new Node(null, Activations.sigmoid);
 		Node b = new Node(null, Activations.sigmoid);
 		Node c = new Node(null, Activations.sigmoid);
