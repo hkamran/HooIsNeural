@@ -4,10 +4,10 @@ import com.hkamran.ai.Activations.Activation;
 
 public class NeatSettings extends NetworkSettings {
 	
-	public double addConnectionChange = 1;
-	public double addNodeChance = 0.9;
-	public double adjustWeightChance = 0.9;
-	public double addLayerChance = 0.9;
+	public double addConnectionChange = 0.3;
+	public double addNodeChance = 0.1;
+	public double adjustWeightChance = 0.5;
+	public double addLayerChance = 0.1;
 	
 	int maxMutations = 1;
 	int hiddenNodeCap = 2;

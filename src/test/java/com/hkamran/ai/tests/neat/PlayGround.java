@@ -39,14 +39,14 @@ public class PlayGround {
 				.withSettings(
 						NeatSettings
 						.create()
-						.setRandomSeed(4000)
+						.setRandomSeed(3000)
 						.setHiddenNodeCap(4)
-						.setHiddenLayerCap(1)
+						.setHiddenLayerCap(2)
 						.setMaxMutations(5)
 						.setWeightAdjustment(1)
 						.setMaxWeight(10.0)
 						.setMinWeight(-10.0)
-						.setPopulationSize(500))
+						.setPopulationSize(1000))
 				.build();	
 		
 		train(network);
