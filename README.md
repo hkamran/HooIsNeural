@@ -1,5 +1,5 @@
 # HooIsNeural
-A Java implementation of NEAT, Feed-Forward, and back-propagating neural networks.
+A Java implementation of Backpropagation, Feed-Forward, and NEAT networks.
 
 ## Screenshots
 <div align="center">
@@ -12,10 +12,10 @@ A Java implementation of NEAT, Feed-Forward, and back-propagating neural network
 
 ## Examples
 
-### Back-Propogating Network
+### Backpropagation Network
 
 #### Creating:
-Use the network builder class to generate a back-propogating network.
+Use the network builder class to generate a Backpropagating network.
 ```java
 (BackPropNetwork) NetworkBuilder
 	.create(NetworkType.BACKPROP)
