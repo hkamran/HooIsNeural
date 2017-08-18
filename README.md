@@ -132,7 +132,7 @@ public class XORFitness implements NeatFitness {
 }
 ```
 
-Next we apply the fitness function to the network and we begin the evolution process.
+Next, we apply the fitness function to the network and we begin the evolution process.
 
 ```java
 network.setFitness(new XORFitness());
